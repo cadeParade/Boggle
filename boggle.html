@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <!-- <script src="http://fb.me/react-0.12.1.js"></script> -->
+  <script src = "http://cdnjs.cloudflare.com/ajax/libs/react/0.12.1/react-with-addons.min.js"></script>
+  <script src="http://fb.me/JSXTransformer-0.12.1.js"></script>
+  <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
+</head>
+<body>
+<div id="content"></div>
+<style type="text/css">
+  .boggle-tile {
+    font-family: Helvetica;
+    font-weight: bold;
+    font-size: 1.3em;
+    color: #2980b9;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    padding:10px;
+    border: 1px solid #34495e;
+    text-align: center;
+    cursor: pointer;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select:none;
+    user-select:none;
+  }
+  .boggle-tile-selected {
+    background-color: #3498db;
+    color: white;
+
+  }
+</style>
+<script type="text/jsx">
+var cx = React.addons.classSet;
+
+var BoggleBoard = React.createClass({
+  getInitialState: function() {
+    return({
+      letterHistory: []
+    })
+  },
+  updateLatestLetter: function(latestLetter, unselect) {
+    if(unselect === "unselect"){
+      this.setState({
+        letterHistory: _.initial(this.state.letterHistory)
+      })
+    }
+    else{
+      this.setState({
+                     letterHistory: this.state.letterHistory.concat([latestLetter])
+                  })
+    }
+  },
+  render: function() {
+    console.log("letter history", this.state.letterHistory)
+    var numRows = 5,
+        numCols = 5,
+        rows = [],
+        _this = this;
+    _.range(numRows).forEach(function(num){
+      rows.push(<BoggleRow updateLatestLetter={_this.updateLatestLetter}
+                           letterHistory={_this.state.letterHistory}
+                           rowNum={num}
+                           numCols={numCols} />)
+    })
+    return (
+      <div className="full-board">
+        <div className="boggle-board">
+        {rows}
+        </div>
+        <button>Submit</button>
+      </div>
+    )
+  }
+
+});
+
+var BoggleRow = React.createClass({
+  render: function() {
+    var rowTiles = [];
+    var _this = this;
+    _.range(this.props.numCols).forEach(function(num) {
+      rowTiles.push(<BoggleTile updateLatestLetter={_this.props.updateLatestLetter}
+                                letterHistory={_this.props.letterHistory}
+                                rowNum={_this.props.rowNum}
+                                colNum={num}/>)
+    })
+    return(
+      <div className="boggle-row">{rowTiles}</div>
+    )
+  }
+})
+
+var BoggleTile = React.createClass({
+  getInitialState: function() {
+    var letters = 'abcdefghijklmnopqrstuvwxyz';
+    var randNum = Math.floor(Math.random() * (25 - 0 + 1)) + 0;
+    var letter = letters.charAt(randNum).toUpperCase();
+    return({
+      letter: letter,
+      selected: false,
+
+    })
+  },
+  checkVertAdj: function(latestLetter) {
+    // if not on same column, not vertically adjacent
+    if(this.props.colNum != latestLetter.props.colNum) {
+      return(false);
+    }
+    // if row num is +/- 1 from latest tile, is adjacent
+    if(this.props.rowNum === latestLetter.props.rowNum + 1 ||
+       this.props.rowNum === latestLetter.props.rowNum -1) {
+      return(true);
+    }
+    return(false);
+  },
+  checkHorizAdj: function(latestLetter) {
+    // if not on same row, not horizontally adjacent
+    if(this.props.rowNum != latestLetter.props.rowNum) {
+      return(false);
+    }
+    // if col num is +/- 1 from latest tile, is adjacent
+    if(this.props.colNum === latestLetter.props.colNum + 1 ||
+       this.props.colNum === latestLetter.props.colNum - 1) {
+      return(true);
+    }
+    return(false);
+  },
+  checkDiagAdj: function(latestLetter) {
+    // if on same row or column, not diagonally adjacent
+    if(this.props.colNum === latestLetter.props.colNum ||
+       this.props.rowNum === latestLetter.props.rowNum) {
+      return(false);
+    }
+    //is it adjacent column?
+    if(this.props.colNum === latestLetter.props.colNum + 1 ||
+       this.props.colNum === latestLetter.props.colNum - 1 ) {
+      //is it adjacent row?
+      if(this.props.rowNum === latestLetter.props.rowNum + 1 ||
+         this.props.rowNum === latestLetter.props.rowNum - 1) {
+          return(true);
+      }
+    }
+    return(false);
+  },
+  isAllowed: function() {
+    // all vars from this function must return true or not a valid move
+    var latestLetter = _.last(this.props.letterHistory)
+
+    var isSelectedButAlsoLastLetter = this.state.selected && this == latestLetter
+
+    var isAdjacent = this.checkHorizAdj(latestLetter) || this.checkVertAdj(latestLetter) || this.checkDiagAdj(latestLetter);
+    var isNotAlreadySelected = !this.state.selected;
+
+    if (isSelectedButAlsoLastLetter) {
+      return "unselect";
+    }
+    else if (isAdjacent && isNotAlreadySelected){
+      return "select";
+    }
+
+  },
+
+  handleClick: function() {
+
+    if(this.props.letterHistory.length >= 1) {
+      if( this.isAllowed() === "select" ){
+        this.props.updateLatestLetter(this);
+        this.setState({selected: !this.state.selected});
+      }
+      else if(this.isAllowed() === "unselect") {
+        this.props.updateLatestLetter(this, "unselect");
+        this.setState({selected: !this.state.selected});
+      }
+    }
+    else{
+        //handles first click, there doesn't need to be checks
+        this.props.updateLatestLetter(this);
+        this.setState({selected: !this.state.selected});
+    }
+  },
+  render: function() {
+  var classes = cx({
+    'boggle-tile': true,
+    'boggle-tile-selected': this.state.selected
+  });
+    return (
+      <div className={classes} onClick={this.handleClick} data-row-num={this.props.rowNum} data-col-num={this.props.colNum} >
+        {this.state.letter}
+      </div>
+    );
+  }
+});
+
+
+
+React.render(
+  <BoggleBoard />,
+  document.getElementById('content')
+);
+
+
+</script>
+
+</body>
+</html>
