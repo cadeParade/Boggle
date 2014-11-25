@@ -41,19 +41,36 @@ var cx = React.addons.classSet;
 var BoggleBoard = React.createClass({
   getInitialState: function() {
     return({
-      letterHistory: []
+      letterHistory: [],
+      submittedWords: []
     })
   },
   updateLatestLetter: function(latestLetter, unselect) {
     if(unselect === "unselect"){
-      this.setState({
-        letterHistory: _.initial(this.state.letterHistory)
-      })
+      console.log('undelect?')
+      this.setState({ letterHistory: _.initial(this.state.letterHistory) });
     }
     else{
+      this.setState({ letterHistory: this.state.letterHistory.concat([latestLetter]) });
+      console.log('updateLatestLetter', this.state.letterHistory)
+    }
+  },
+  handleSubmit: function() {
+    if(this.state.letterHistory.length < 3){
+      console.log("not enough letters")
+    }
+    else {
+      var submission = [];
+      _this = this;
+      this.state.letterHistory.forEach(function(letter) {
+        submission.push(letter.state.letter)
+      })
+      submissionState = this.state.submittedWords;
+      submissionState.push(submission)
       this.setState({
-                     letterHistory: this.state.letterHistory.concat([latestLetter])
-                  })
+        letterHistory: [],
+        submittedWords: submissionState
+      });
     }
   },
   render: function() {
@@ -73,12 +90,25 @@ var BoggleBoard = React.createClass({
         <div className="boggle-board">
         {rows}
         </div>
-        <button>Submit</button>
+        <button onClick={this.handleSubmit}>Submit</button>
+        <SubmissionsBox submissions={this.state.submittedWords} />
       </div>
     )
   }
 
 });
+
+var SubmissionsBox = React.createClass({
+  render: function() {
+    var submissions = [];
+    this.props.submissions.forEach(function(word) {
+      submissions.push(<div>{word}</div>)
+    })
+    return(
+      <div className="boggle-submissions">Submissions: {submissions} </div>
+      )
+  }
+})
 
 var BoggleRow = React.createClass({
   render: function() {
@@ -103,7 +133,6 @@ var BoggleTile = React.createClass({
     var letter = letters.charAt(randNum).toUpperCase();
     return({
       letter: letter,
-      selected: false,
 
     })
   },
@@ -115,6 +144,7 @@ var BoggleTile = React.createClass({
     // if row num is +/- 1 from latest tile, is adjacent
     if(this.props.rowNum === latestLetter.props.rowNum + 1 ||
        this.props.rowNum === latestLetter.props.rowNum -1) {
+      console.log('vert align')
       return(true);
     }
     return(false);
@@ -127,6 +157,7 @@ var BoggleTile = React.createClass({
     // if col num is +/- 1 from latest tile, is adjacent
     if(this.props.colNum === latestLetter.props.colNum + 1 ||
        this.props.colNum === latestLetter.props.colNum - 1) {
+      console.log('horiz align')
       return(true);
     }
     return(false);
@@ -143,6 +174,7 @@ var BoggleTile = React.createClass({
       //is it adjacent row?
       if(this.props.rowNum === latestLetter.props.rowNum + 1 ||
          this.props.rowNum === latestLetter.props.rowNum - 1) {
+          console.log('diag align')
           return(true);
       }
     }
@@ -152,10 +184,10 @@ var BoggleTile = React.createClass({
     // all vars from this function must return true or not a valid move
     var latestLetter = _.last(this.props.letterHistory)
 
-    var isSelectedButAlsoLastLetter = this.state.selected && this == latestLetter
+    var isSelectedButAlsoLastLetter = _.contains(this.props.letterHistory, this) && this.props.rowNum === latestLetter.props.rowNum && this.props.colNum === latestLetter.props.colNum
 
     var isAdjacent = this.checkHorizAdj(latestLetter) || this.checkVertAdj(latestLetter) || this.checkDiagAdj(latestLetter);
-    var isNotAlreadySelected = !this.state.selected;
+    var isNotAlreadySelected = !(_.contains(this.props.letterHistory, this))
 
     if (isSelectedButAlsoLastLetter) {
       return "unselect";
@@ -163,32 +195,28 @@ var BoggleTile = React.createClass({
     else if (isAdjacent && isNotAlreadySelected){
       return "select";
     }
-
   },
-
   handleClick: function() {
 
     if(this.props.letterHistory.length >= 1) {
+      console.log("letterHistory length", this.props.letterHistory.length)
       if( this.isAllowed() === "select" ){
         this.props.updateLatestLetter(this);
-        this.setState({selected: !this.state.selected});
       }
       else if(this.isAllowed() === "unselect") {
         this.props.updateLatestLetter(this, "unselect");
-        this.setState({selected: !this.state.selected});
       }
     }
     else{
         //handles first click, there doesn't need to be checks
         this.props.updateLatestLetter(this);
-        this.setState({selected: !this.state.selected});
     }
   },
   render: function() {
-  var classes = cx({
-    'boggle-tile': true,
-    'boggle-tile-selected': this.state.selected
-  });
+    var classes = cx({
+      'boggle-tile': true,
+      'boggle-tile-selected': _.contains(this.props.letterHistory, this)
+    });
     return (
       <div className={classes} onClick={this.handleClick} data-row-num={this.props.rowNum} data-col-num={this.props.colNum} >
         {this.state.letter}
