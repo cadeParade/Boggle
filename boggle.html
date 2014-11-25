@@ -47,17 +47,14 @@ var BoggleBoard = React.createClass({
   },
   updateLatestLetter: function(latestLetter, unselect) {
     if(unselect === "unselect"){
-      console.log('undelect?')
       this.setState({ letterHistory: _.initial(this.state.letterHistory) });
     }
     else{
       this.setState({ letterHistory: this.state.letterHistory.concat([latestLetter]) });
-      console.log('updateLatestLetter', this.state.letterHistory)
     }
   },
   handleSubmit: function() {
     if(this.state.letterHistory.length < 3){
-      console.log("not enough letters")
     }
     else {
       var submission = [];
@@ -133,61 +130,37 @@ var BoggleTile = React.createClass({
     var letter = letters.charAt(randNum).toUpperCase();
     return({
       letter: letter,
-
     })
   },
-  checkVertAdj: function(latestLetter) {
-    // if not on same column, not vertically adjacent
-    if(this.props.colNum != latestLetter.props.colNum) {
-      return(false);
-    }
-    // if row num is +/- 1 from latest tile, is adjacent
-    if(this.props.rowNum === latestLetter.props.rowNum + 1 ||
-       this.props.rowNum === latestLetter.props.rowNum -1) {
-      console.log('vert align')
-      return(true);
-    }
-    return(false);
-  },
-  checkHorizAdj: function(latestLetter) {
-    // if not on same row, not horizontally adjacent
-    if(this.props.rowNum != latestLetter.props.rowNum) {
-      return(false);
-    }
-    // if col num is +/- 1 from latest tile, is adjacent
-    if(this.props.colNum === latestLetter.props.colNum + 1 ||
-       this.props.colNum === latestLetter.props.colNum - 1) {
-      console.log('horiz align')
-      return(true);
-    }
-    return(false);
-  },
-  checkDiagAdj: function(latestLetter) {
-    // if on same row or column, not diagonally adjacent
-    if(this.props.colNum === latestLetter.props.colNum ||
-       this.props.rowNum === latestLetter.props.rowNum) {
-      return(false);
-    }
-    //is it adjacent column?
-    if(this.props.colNum === latestLetter.props.colNum + 1 ||
-       this.props.colNum === latestLetter.props.colNum - 1 ) {
-      //is it adjacent row?
-      if(this.props.rowNum === latestLetter.props.rowNum + 1 ||
-         this.props.rowNum === latestLetter.props.rowNum - 1) {
-          console.log('diag align')
-          return(true);
-      }
-    }
-    return(false);
+  checkAdjacency: function(latestLetter) {
+    var currRow = this.props.rowNum;
+    var currCol = this.props.colNum;
+    var latestRow = latestLetter.props.rowNum;
+    var latestCol = latestLetter.props.colNum;
+
+    var sameRow = currRow === latestRow;
+    var sameCol = currCol === latestCol;
+
+    var adjRow = currRow === latestRow + 1 || currRow === latestRow - 1;
+    var adjCol = currCol === latestCol + 1 || currCol === latestCol - 1;
+
+    var horizAdj = sameRow && adjCol;
+    var vertAdj = sameCol && adjRow;
+    var diagAdj = adjRow && adjCol;
+
+    return horizAdj || vertAdj || diagAdj;
+
   },
   isAllowed: function() {
     // all vars from this function must return true or not a valid move
     var latestLetter = _.last(this.props.letterHistory)
 
-    var isSelectedButAlsoLastLetter = _.contains(this.props.letterHistory, this) && this.props.rowNum === latestLetter.props.rowNum && this.props.colNum === latestLetter.props.colNum
+    var isSelectedButAlsoLastLetter = _.contains(this.props.letterHistory, this) &&
+                                      this.props.rowNum === latestLetter.props.rowNum &&
+                                      this.props.colNum === latestLetter.props.colNum
 
-    var isAdjacent = this.checkHorizAdj(latestLetter) || this.checkVertAdj(latestLetter) || this.checkDiagAdj(latestLetter);
-    var isNotAlreadySelected = !(_.contains(this.props.letterHistory, this))
+    var isAdjacent = this.checkAdjacency(latestLetter);
+    var isNotAlreadySelected = !(_.contains(this.props.letterHistory, this));
 
     if (isSelectedButAlsoLastLetter) {
       return "unselect";
@@ -199,7 +172,6 @@ var BoggleTile = React.createClass({
   handleClick: function() {
 
     if(this.props.letterHistory.length >= 1) {
-      console.log("letterHistory length", this.props.letterHistory.length)
       if( this.isAllowed() === "select" ){
         this.props.updateLatestLetter(this);
       }
