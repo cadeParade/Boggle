@@ -58,15 +58,25 @@ var BoggleBoard = React.createClass({
     }
     else {
       var submission = [];
-      _this = this;
+      var _this = this;
       this.state.letterHistory.forEach(function(letter) {
-        submission.push(letter.state.letter)
+        submission.push(letter.state.letter);
       })
-      submissionState = this.state.submittedWords;
-      submissionState.push(submission)
-      this.setState({
-        letterHistory: [],
-        submittedWords: submissionState
+      var word = submission.join("");
+      $.post('/check_word', {word: word}, function(isWord){
+        if(isWord === "True"){
+          var submissionState = _this.state.submittedWords;
+          submissionState.push(submission);
+          _this.setState({
+            letterHistory: [],
+            submittedWords: submissionState
+          });
+        }
+        else{
+           _this.setState({
+            letterHistory: [],
+          });
+        }
       });
     }
   },
@@ -75,12 +85,14 @@ var BoggleBoard = React.createClass({
     var numRows = 5,
         numCols = 5,
         rows = [],
+        tiles = tileSet(),
         _this = this;
     _.range(numRows).forEach(function(num){
       rows.push(<BoggleRow updateLatestLetter={_this.updateLatestLetter}
                            letterHistory={_this.state.letterHistory}
                            rowNum={num}
-                           numCols={numCols} />)
+                           numCols={numCols}
+                           tiles={tiles[num]} />)
     })
     return (
       <div className="full-board">
@@ -102,7 +114,8 @@ var SubmissionsBox = React.createClass({
       submissions.push(<div>{word}</div>)
     })
     return(
-      <div className="boggle-submissions">Submissions: {submissions} </div>
+      <div className="boggle-submissions">Submissions: {submissions} <br/>
+      <input type="file" id="files" onChange={this.importFile} ></input></div>
       )
   }
 })
@@ -115,7 +128,8 @@ var BoggleRow = React.createClass({
       rowTiles.push(<BoggleTile updateLatestLetter={_this.props.updateLatestLetter}
                                 letterHistory={_this.props.letterHistory}
                                 rowNum={_this.props.rowNum}
-                                colNum={num}/>)
+                                colNum={num}
+                                tile={_this.props.tiles[num]} />)
     })
     return(
       <div className="boggle-row">{rowTiles}</div>
@@ -125,11 +139,9 @@ var BoggleRow = React.createClass({
 
 var BoggleTile = React.createClass({
   getInitialState: function() {
-    var letters = 'abcdefghijklmnopqrstuvwxyz';
-    var randNum = Math.floor(Math.random() * (25 - 0 + 1)) + 0;
-    var letter = letters.charAt(randNum).toUpperCase();
+    var randNum = Math.floor(Math.random() * (5 - 0 + 1)) + 0;
     return({
-      letter: letter,
+      letter: this.props.tile[randNum].toUpperCase(),
     })
   },
   checkAdjacency: function(latestLetter) {
@@ -197,8 +209,43 @@ var BoggleTile = React.createClass({
   }
 });
 
+var tileSet = function(){
+var tiles = [["a","a","a","f","r","s"],
+            ["a","a","e","e","e","e"],
+            ["a","a","f","i","r","s"],
+            ["a","d","e","n","n","n"],
+            ["a","e","e","e","e","m"],
+            ["a","e","e","g","m","u"],
+            ["a","e","g","m","n","n"],
+            ["a","f","i","r","s","y"],
+            ["b","j","k","q","x","z"],
+            ["c","c","e","n","s","t"],
+            ["c","e","i","i","l","t"],
+            ["c","e","i","l","p","t"],
+            ["c","e","i","p","s","t"],
+            ["d","d","h","n","o","t"],
+            ["d","h","h","l","o","r"],
+            ["d","h","l","n","o","r"],
+            ["d","h","l","n","o","r"],
+            ["e","i","i","i","t","t"],
+            ["e","m","o","t","t","t"],
+            ["e","n","s","s","s","u"],
+            ["f","i","p","r","s","y"],
+            ["g","o","r","r","v","w"],
+            ["i","p","r","r","r","y"],
+            ["n","o","o","t","u","w"],
+            ["o","o","o","t","t","u"]]
 
+  var shuff_tiles = _.shuffle(tiles);
+  var arrays = [],
+      size = 5;
 
+  while (shuff_tiles.length > 0)
+      arrays.push(shuff_tiles.splice(0, size));
+  return arrays
+}
+
+tileSet();
 React.render(
   <BoggleBoard />,
   document.getElementById('content')
