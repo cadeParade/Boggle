@@ -45,13 +45,11 @@ var BoggleBoard = React.createClass({
       submittedWords: []
     })
   },
-  updateLatestLetter: function(latestLetter, unselect) {
-    if(unselect === "unselect"){
-      this.setState({ letterHistory: _.initial(this.state.letterHistory) });
-    }
-    else{
+  selectNewLetter: function(latestLetter) {
       this.setState({ letterHistory: this.state.letterHistory.concat([latestLetter]) });
-    }
+  },
+  unselectLastLetter: function() {
+      this.setState({ letterHistory: _.initial(this.state.letterHistory) });
   },
   handleSubmit: function() {
     if(this.state.letterHistory.length < 3){
@@ -88,7 +86,8 @@ var BoggleBoard = React.createClass({
         tiles = tileSet(),
         _this = this;
     _.range(numRows).forEach(function(num){
-      rows.push(<BoggleRow updateLatestLetter={_this.updateLatestLetter}
+      rows.push(<BoggleRow selectNewLetter={_this.selectNewLetter}
+                           unselectLastLetter={_this.unselectLastLetter}
                            letterHistory={_this.state.letterHistory}
                            rowNum={num}
                            numCols={numCols}
@@ -125,7 +124,8 @@ var BoggleRow = React.createClass({
     var rowTiles = [];
     var _this = this;
     _.range(this.props.numCols).forEach(function(num) {
-      rowTiles.push(<BoggleTile updateLatestLetter={_this.props.updateLatestLetter}
+      rowTiles.push(<BoggleTile selectNewLetter={_this.props.selectNewLetter}
+                                unselectLastLetter={_this.props.unselectLastLetter}
                                 letterHistory={_this.props.letterHistory}
                                 rowNum={_this.props.rowNum}
                                 colNum={num}
@@ -163,14 +163,14 @@ var BoggleTile = React.createClass({
     return horizAdj || vertAdj || diagAdj;
 
   },
-  isAllowed: function() {
-    // all vars from this function must return true or not a valid move
+  selectOrUnselect: function() {
     var latestLetter = _.last(this.props.letterHistory)
 
+    // handles unselect
     var isSelectedButAlsoLastLetter = _.contains(this.props.letterHistory, this) &&
                                       this.props.rowNum === latestLetter.props.rowNum &&
                                       this.props.colNum === latestLetter.props.colNum
-
+    // handles select
     var isAdjacent = this.checkAdjacency(latestLetter);
     var isNotAlreadySelected = !(_.contains(this.props.letterHistory, this));
 
@@ -182,18 +182,18 @@ var BoggleTile = React.createClass({
     }
   },
   handleClick: function() {
-
     if(this.props.letterHistory.length >= 1) {
-      if( this.isAllowed() === "select" ){
-        this.props.updateLatestLetter(this);
+      var selectOrUnselect = this.selectOrUnselect();
+      if( selectOrUnselect === "select" ){
+        this.props.selectNewLetter(this);
       }
-      else if(this.isAllowed() === "unselect") {
-        this.props.updateLatestLetter(this, "unselect");
+      else if(selectOrUnselect === "unselect") {
+        this.props.unselectLastLetter();
       }
     }
     else{
         //handles first click, there doesn't need to be checks
-        this.props.updateLatestLetter(this);
+        this.props.selectNewLetter(this);
     }
   },
   render: function() {
