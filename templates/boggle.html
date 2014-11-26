@@ -51,17 +51,22 @@ var BoggleBoard = React.createClass({
   unselectLastLetter: function() {
       this.setState({ letterHistory: _.initial(this.state.letterHistory) });
   },
+  makeWordFromHistory: function() {
+    var submission = [];
+    var _this = this;
+    this.state.letterHistory.forEach(function(letter) {
+      submission.push(letter.state.letter);
+    })
+    var word = submission.join("");
+    return submission;
+  },
   handleSubmit: function() {
     if(this.state.letterHistory.length < 3){
     }
     else {
-      var submission = [];
       var _this = this;
-      this.state.letterHistory.forEach(function(letter) {
-        submission.push(letter.state.letter);
-      })
-      var word = submission.join("");
-      $.post('/check_word', {word: word}, function(isWord){
+      submission = this.makeWordFromHistory()
+      $.post('/check_word', {word: submission.join("")}, function(isWord){
         if(isWord === "True"){
           var submissionState = _this.state.submittedWords;
           submissionState.push(submission);
@@ -73,7 +78,7 @@ var BoggleBoard = React.createClass({
         else{
            _this.setState({
             letterHistory: [],
-          });
+           });
         }
       });
     }
@@ -113,8 +118,7 @@ var SubmissionsBox = React.createClass({
       submissions.push(<div>{word}</div>)
     })
     return(
-      <div className="boggle-submissions">Submissions: {submissions} <br/>
-      <input type="file" id="files" onChange={this.importFile} ></input></div>
+      <div className="boggle-submissions">Submissions: {submissions}</div>
       )
   }
 })
@@ -139,7 +143,7 @@ var BoggleRow = React.createClass({
 
 var BoggleTile = React.createClass({
   getInitialState: function() {
-    var randNum = Math.floor(Math.random() * (5 - 0 + 1)) + 0;
+    var randNum = Math.floor(Math.random() * (5 - 0 + 1)) + 0; //random int from 0-5
     return({
       letter: this.props.tile[randNum].toUpperCase(),
     })
@@ -161,33 +165,26 @@ var BoggleTile = React.createClass({
     var diagAdj = adjRow && adjCol;
 
     return horizAdj || vertAdj || diagAdj;
-
   },
-  selectOrUnselect: function() {
+  shouldSelect: function() {
     var latestLetter = _.last(this.props.letterHistory)
-
-    // handles unselect
+    var isAdjacent = this.checkAdjacency(latestLetter);
+    var isNotAlreadySelected = !(_.contains(this.props.letterHistory, this));
+    return isAdjacent && isNotAlreadySelected;
+  },
+  shouldUnselect: function() {
+    var latestLetter = _.last(this.props.letterHistory)
     var isSelectedButAlsoLastLetter = _.contains(this.props.letterHistory, this) &&
                                       this.props.rowNum === latestLetter.props.rowNum &&
                                       this.props.colNum === latestLetter.props.colNum
-    // handles select
-    var isAdjacent = this.checkAdjacency(latestLetter);
-    var isNotAlreadySelected = !(_.contains(this.props.letterHistory, this));
-
-    if (isSelectedButAlsoLastLetter) {
-      return "unselect";
-    }
-    else if (isAdjacent && isNotAlreadySelected){
-      return "select";
-    }
+    return isSelectedButAlsoLastLetter;
   },
   handleClick: function() {
     if(this.props.letterHistory.length >= 1) {
-      var selectOrUnselect = this.selectOrUnselect();
-      if( selectOrUnselect === "select" ){
+      if(this.shouldSelect()) {
         this.props.selectNewLetter(this);
       }
-      else if(selectOrUnselect === "unselect") {
+      else if (this.shouldUnselect()) {
         this.props.unselectLastLetter();
       }
     }
