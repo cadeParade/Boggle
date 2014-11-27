@@ -10,7 +10,8 @@ word_dict = {}
 
 @app.route("/")
 def index():
-  word_dict = parse_dict('/usr/share/dict/words')
+  # word_dict = parse_dict('/usr/share/dict/words')
+  word_dict = parse_dict('wordsEn.txt')
   return render_template("boggle.html")
 
 @app.route("/check_word", methods=["POST"])

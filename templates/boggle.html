@@ -3,11 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>Document</title>
+  <script type="text/javascript" src="../static/js/react-with-addons.min.js"></script>
+  <script type="text/javascript" src="../static/js/jsxTransformer.js"></script>
+  <script type="text/javascript" src="../static/js/jquery-1.10.0.min.js"></script>
+  <script type="text/javascript" src="../static/js/underscore.min.js"></script>
   <!-- <script src="http://fb.me/react-0.12.1.js"></script> -->
-  <script src = "http://cdnjs.cloudflare.com/ajax/libs/react/0.12.1/react-with-addons.min.js"></script>
+  <!-- <script src = "http://cdnjs.cloudflare.com/ajax/libs/react/0.12.1/react-with-addons.min.js"></script>
   <script src="http://fb.me/JSXTransformer-0.12.1.js"></script>
   <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script> -->
 </head>
 <body>
 <div id="content"></div>
@@ -42,7 +46,8 @@ var BoggleBoard = React.createClass({
   getInitialState: function() {
     return({
       letterHistory: [],
-      submittedWords: []
+      submittedWords: [],
+      finalScore: 0
     })
   },
   selectNewLetter: function(latestLetter) {
@@ -83,6 +88,26 @@ var BoggleBoard = React.createClass({
       });
     }
   },
+  scoreWord: function(wordArray) {
+    var wordScore = 0;
+    var wordLength = wordArray.length;
+    if(wordLength >= 3) {
+      wordScore = 1;
+      if(wordLength > 4) {
+        wordScore = wordScore + (wordLength - 4);
+      }
+    }
+    return wordScore;
+  },
+  handleFinalSubmit: function() {
+    var finalScore = 0;
+    var _this = this;
+    this.state.submittedWords.forEach(function(wordArray) {
+      finalScore = finalScore + _this.scoreWord(wordArray);
+    })
+    this.setState({finalScore: finalScore,
+                   submittedWords: []});
+  },
   render: function() {
     console.log("letter history", this.state.letterHistory)
     var numRows = 5,
@@ -105,6 +130,7 @@ var BoggleBoard = React.createClass({
         </div>
         <button onClick={this.handleSubmit}>Submit</button>
         <SubmissionsBox submissions={this.state.submittedWords} />
+        <button onClick={this.handleFinalSubmit}>Score me</button>
       </div>
     )
   }
