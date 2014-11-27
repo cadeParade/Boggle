@@ -57,21 +57,35 @@ var BoggleBoard = React.createClass({
       this.setState({ letterHistory: _.initial(this.state.letterHistory) });
   },
   makeWordFromHistory: function() {
-    var submission = [];
+    var word = [];
     var _this = this;
     this.state.letterHistory.forEach(function(letter) {
-      submission.push(letter.state.letter);
+      word.push(letter.state.letter);
     })
-    var word = submission.join("");
-    return submission;
+    var word = word.join("");
+    return word;
+  },
+  isDuplicate: function(word) {
+    console.log(this.state.submittedWords)
+    if(_.contains(this.state.submittedWords, word) ) {
+      return true;
+    }
+    return false;
+  },
+  clearSelection: function() {
+     this.setState({
+      letterHistory: [],
+      })
   },
   handleSubmit: function() {
-    if(this.state.letterHistory.length < 3){
+    var submission = this.makeWordFromHistory()
+    var _this = this;
+
+    if(submission.length < 3 || this.isDuplicate(submission)){
+      this.clearSelection();
     }
     else {
-      var _this = this;
-      submission = this.makeWordFromHistory()
-      $.post('/check_word', {word: submission.join("")}, function(isWord){
+      $.post('/check_word', {word: submission}, function(isWord){
         if(isWord === "True"){
           var submissionState = _this.state.submittedWords;
           submissionState.push(submission);
@@ -81,9 +95,7 @@ var BoggleBoard = React.createClass({
           });
         }
         else{
-           _this.setState({
-            letterHistory: [],
-           });
+          _this.clearSelection();
         }
       });
     }
@@ -109,12 +121,12 @@ var BoggleBoard = React.createClass({
                    submittedWords: []});
   },
   render: function() {
-    console.log("letter history", this.state.letterHistory)
     var numRows = 5,
         numCols = 5,
         rows = [],
         tiles = tileSet(),
         _this = this;
+        console.log(this.state.finalScore)
     _.range(numRows).forEach(function(num){
       rows.push(<BoggleRow selectNewLetter={_this.selectNewLetter}
                            unselectLastLetter={_this.unselectLastLetter}
