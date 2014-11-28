@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Document</title>
   <link href='http://cdnjs.cloudflare.com/ajax/libs/foundation/5.4.7/css/foundation.min.css' rel='stylesheet' type='text/css'>
+  <link href='../static/css/style.css' rel='stylesheet' type='text/css'>
 
   <script type="text/javascript" src="../static/js/react-with-addons.min.js"></script>
   <script type="text/javascript" src="../static/js/jsxTransformer.js"></script>
@@ -23,30 +24,8 @@
 
 <style type="text/css">
 
-  body {
-    padding:20px;
-  }
-  .boggle-tile {
-    font-family: Helvetica;
-    font-weight: bold;
-    font-size: 1.3em;
-    color: #2980b9;
-    display: inline-block;
-    height: 60px;
-    width: 60px;
-    padding:10px;
-    border: 1px solid #34495e;
-    text-align: center;
-    cursor: pointer;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select:none;
-    user-select:none;
-  }
-  .boggle-tile-selected {
-    background-color: #3498db;
-    color: white;
-  }
+
+
 </style>
 <script type="text/jsx">
 var cx = React.addons.classSet;
@@ -146,6 +125,8 @@ var BoggleBoard = React.createClass({
     })
     return (
   <div className="row">
+
+
     <div className="large-12 columns">
         <div className="row">
           <div className="large-4 columns">
@@ -277,12 +258,20 @@ var BoggleTile = React.createClass({
   render: function() {
     var classes = cx({
       'boggle-tile': true,
-      'boggle-tile-selected': _.contains(this.props.letterHistory, this)
+      'boggle-tile-selected': _.contains(this.props.letterHistory, this),
+      'box-scene': true
     });
     return (
       <div className={classes} onClick={this.handleClick}>
-        {this.state.letter}
-      </div>
+        <div className='box' >
+            <div className='front face'>
+                {this.state.letter}
+            </div>
+            <div className="side face">
+                {this.state.letter}
+            </div>
+        </div>
+    </div>
     );
   }
 });
