@@ -3,10 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Document</title>
+  <link href='http://cdnjs.cloudflare.com/ajax/libs/foundation/5.4.7/css/foundation.min.css' rel='stylesheet' type='text/css'>
+
   <script type="text/javascript" src="../static/js/react-with-addons.min.js"></script>
   <script type="text/javascript" src="../static/js/jsxTransformer.js"></script>
   <script type="text/javascript" src="../static/js/jquery-1.10.0.min.js"></script>
   <script type="text/javascript" src="../static/js/underscore.min.js"></script>
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.4.7/js/foundation.min.js"></script>
   <!-- <script src="http://fb.me/react-0.12.1.js"></script> -->
   <!-- <script src = "http://cdnjs.cloudflare.com/ajax/libs/react/0.12.1/react-with-addons.min.js"></script>
   <script src="http://fb.me/JSXTransformer-0.12.1.js"></script>
@@ -15,15 +18,22 @@
 </head>
 <body>
 <div id="content"></div>
+
+
+
 <style type="text/css">
+
+  body {
+    padding:20px;
+  }
   .boggle-tile {
     font-family: Helvetica;
     font-weight: bold;
     font-size: 1.3em;
     color: #2980b9;
     display: inline-block;
-    height: 20px;
-    width: 20px;
+    height: 60px;
+    width: 60px;
     padding:10px;
     border: 1px solid #34495e;
     text-align: center;
@@ -36,7 +46,6 @@
   .boggle-tile-selected {
     background-color: #3498db;
     color: white;
-
   }
 </style>
 <script type="text/jsx">
@@ -136,14 +145,46 @@ var BoggleBoard = React.createClass({
                            tiles={tiles[num]} />)
     })
     return (
-      <div className="full-board">
-        <div className="boggle-board">
-        {rows}
-        </div>
-        <button onClick={this.handleSubmit}>Submit</button>
-        <SubmissionsBox submissions={this.state.submittedWords} />
+  <div className="row">
+    <div className="large-12 columns">
+        <div className="row">
+          <div className="large-4 columns">
+            <div className="boggle-board">
+              {rows}
+            </div>
+          </div>
+
+          <div className="large-8 columns">
+            <h3 className="show-for-small">Header<hr/></h3>
+            <div className="panel">
+              <SubmissionsBox submissions={this.state.submittedWords} />
+            </div>
+
+          <div className="row">
+              <div className="large-6 small-6 columns">
+                <div className="panel">
+                  <button onClick={this.handleSubmit}>Submit</button>
+                </div>
+              </div>
+
+              <div className="large-6 small-6 columns">
+                <div className="panel">
         <button onClick={this.handleFinalSubmit}>Score me</button>
-      </div>
+
+                </div>
+              </div>
+          </div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+
+
+      // <div className="full-board">
+       
+        
+      // </div>
     )
   }
 
