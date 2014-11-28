@@ -1,10 +1,5 @@
 /** @jsx React.DOM */
-var React = require('react/addons');
-var $ = require('jquery');
-var _ = require('underscore');
-var tileSet = require('../js/tiles.js')
-
-var cx = React.addons.classSet;
+var cx = window.React.addons.classSet;
 
 
 var BoggleBoard = React.createClass({

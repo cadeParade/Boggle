@@ -1,6 +1,4 @@
 /** @jsx React.DOM */
-var React = require('react/addons');
-var _ = require('underscore');
 
 var WaitingRoom = React.createClass({
   backToChoice: function() {

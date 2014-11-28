@@ -1,9 +1,5 @@
 
 /** @jsx React.DOM */
-var React = require('react/addons');
-var $ = require('jquery');
-var _ = require('underscore');
-var io = require('socket.io-client');
 var ChoicePage = require('./choicePage.jsx');
 var WaitingRoom = require('./waitingRoom.jsx');
 var JoinRoom = require('./joinRoom.jsx');

@@ -10,23 +10,23 @@ var reactify = require('reactify');
 var notify = require("gulp-notify");
 
 
-gulp.task('app', function() {
-  var bundler = watchify(browserify('./static/jsx/main.jsx', watchify.args));
-  bundler.transform('reactify');
-  bundler.on('update', rebundle);
+// gulp.task('app', function() {
+  // var bundler = watchify(browserify('./static/jsx/main.jsx', watchify.args));
+  // bundler.transform('reactify');
+  // bundler.on('update', rebundle);
 
-  function rebundle() {
-    return bundler.bundle({ debug: true })
-      .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-      .on('error', notify.onError(function (error) {
-        return error.message;
-      }))
-      .pipe(source('bundle.js'))
-      .pipe(gulp.dest('./static/js/dist/'));
-  }
+  // function rebundle() {
+  //   return bundler.bundle({ debug: true })
+  //     .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+  //     .on('error', notify.onError(function (error) {
+  //       return error.message;
+  //     }))
+  //     .pipe(source('bundle.js'))
+  //     .pipe(gulp.dest('./static/js/dist/'));
+  // }
 
-  return rebundle();
-});
+  // return rebundle();
+// });
 
 
 gulp.task('sass', function () {
@@ -45,4 +45,4 @@ gulp.task('watch', function() {
 });
 
 // Default Task
-gulp.task('default', ['watch', 'app']);
+gulp.task('default', ['watch']);

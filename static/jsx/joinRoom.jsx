@@ -1,5 +1,5 @@
 /** @jsx React.DOM */
-var React = require('react/addons');
+// var React = require('react/addons');
 
 var JoinRoom = React.createClass({
   getInitialState: function() {
