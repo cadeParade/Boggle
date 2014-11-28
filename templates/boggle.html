@@ -214,7 +214,7 @@ var BoggleTile = React.createClass({
     var latestLetter = _.last(this.props.letterHistory)
     var isSelectedButAlsoLastLetter = _.contains(this.props.letterHistory, this) &&
                                       this.props.rowNum === latestLetter.props.rowNum &&
-                                      this.props.colNum === latestLetter.props.colNum
+                                      this.props.colNum === latestLetter.props.colNum;
     return isSelectedButAlsoLastLetter;
   },
   handleClick: function() {
@@ -224,6 +224,8 @@ var BoggleTile = React.createClass({
       }
       else if (this.shouldUnselect()) {
         this.props.unselectLastLetter();
+      } else {
+        // must have clicked a noncontiguous letter, do nothing
       }
     }
     else{
@@ -237,7 +239,7 @@ var BoggleTile = React.createClass({
       'boggle-tile-selected': _.contains(this.props.letterHistory, this)
     });
     return (
-      <div className={classes} onClick={this.handleClick} data-row-num={this.props.rowNum} data-col-num={this.props.colNum} >
+      <div className={classes} onClick={this.handleClick}>
         {this.state.letter}
       </div>
     );
@@ -280,7 +282,6 @@ var tiles = [["a","a","a","f","r","s"],
   return arrays
 }
 
-tileSet();
 React.render(
   <BoggleBoard />,
   document.getElementById('content')
