@@ -17,7 +17,6 @@ var BoggleBoard = React.createClass({
     return({
       letterHistory: [],
       submittedWords: [],
-      finalScore: 0,
       gameIsFinished: false,
       letters: tiles
     });
@@ -97,12 +96,12 @@ var BoggleBoard = React.createClass({
     var userScores = []
 
    _.each(this.props.game.room, function(data, userId) {
-      userScores.push(<li>{user}: {data.score}</li>)
+      userScores.push(<li>{data.playerName}: {data.score}</li>)
     })
 
     return (
       <div className="grid-items">
-        <EndGameOverlay gameIsFinished={this.state.gameIsFinished} wordList={this.state.submittedWords} finalScore={this.state.finalScore} />
+        <EndGameOverlay gameIsFinished={this.state.gameIsFinished} wordList={this.state.submittedWords} finalScore={this.props.game.score} />
 
         <a href="javascript:void(0)" className="grid-item">
           <div className="boggle-board">

@@ -67,9 +67,9 @@ Game.prototype.joinRoom = function(roomId, playerName) {
   var _this = this;
   this.socket.emit('request room join', {roomId: roomId, playerName: playerName}, function(success, updatedRoom) {
     if (success) {
-      _this.roomId = roomId;
+      _this.roomName = roomId;
       _this.room = updatedRoom;
-      _this.app.setState({game: this, view: "WaitingRoom"})
+      _this.app.setState({game: _this, view: "WaitingRoom"})
     }
     else {
       console.log("you fail");

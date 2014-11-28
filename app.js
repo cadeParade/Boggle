@@ -15,7 +15,7 @@ app.use(express.urlencoded());
 app.use(express.json());
 
 
-var rooms = {}
+var rooms = {}// {socketId: {playerName: "tom", wordList: {word: true, word2: true}, score: 5}}
 
 
 app.get('/', function(req, res){
