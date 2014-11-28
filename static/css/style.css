@@ -1,76 +1,69 @@
-  body {
+body {
     padding:20px;
-  }
-  .boggle-row {
+}
+
+.boggle-row {
     margin-bottom: -6px;
-  }
-  .boggle-tile {
+}
+
+.boggle-tile {
     font-family: Helvetica;
     font-weight: bold;
-    /*font-size: 1.3em;*/
-    color: #2980b9;
+    font-size: 1.7em;
     display: inline-block;
-    height: 60px;
-    width: 60px;
-    /*padding:10px;*/
-    /*border: 1px solid #34495e;*/
     text-align: center;
     cursor: pointer;
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select:none;
     user-select:none;
-  }
-  .boggle-tile-selected {
-    background-color: #3498db;
-    color: white;
-  }
+}
 
-.box-scene {
+
+/* container for box */
+.box-transform-container {
     perspective: 700;
-    width: 58px;
-    height: 58px;
     display: inline-block;
-/*    width: 120px;
-    height: 60px;*/
     margin: 1px;
-
     z-index: 999;
 }
-.box-scene:hover .box {
-    transform: rotateY(-90deg);
-}
+
 .box {
-    /*width: 180px;
-    height: 180px;*/
     width: 58px;
     height: 58px;
     position: relative;
     transform-style: preserve-3d;
-    transition: all 0.4s ease-out;
+    transition: all 0.2s ease-out;
     transform-origin: 30px 30px -30px;
-    /* float: left; */
-    /*margin: 30px auto;*/
+}
+/* select and unselect class goes on box class */
+.select {
+    transform: rotateY(-90deg);
+}
+.unselect {
+    transform: rotateY(0deg);
 }
 
+/* each box contains front face and side face */
 .face {
     position: absolute;
     width: 100%;
     height: 100%;
     backface-visibility: visible; 
     transform-origin: 0 0;
-    font-size: 1.3em;
-    padding-top: 15px;
+    padding-top: 11px;
 }
+
 .front {
+    color: #2980b9;
     transform: rotateY(0deg);
     z-index: 2;
-    background: #d9d9d9;
 }
 .side {
-    background: #9dcc78;
     transform: rotateY(90deg);
     z-index: 1;
     left: 60px;
+    background-color: #3498db;
+    color: white;
 }
 

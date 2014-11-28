@@ -54,7 +54,6 @@ var BoggleBoard = React.createClass({
     return word;
   },
   isDuplicate: function(word) {
-    console.log(this.state.submittedWords)
     if(_.contains(this.state.submittedWords, word) ) {
       return true;
     }
@@ -256,14 +255,21 @@ var BoggleTile = React.createClass({
     }
   },
   render: function() {
-    var classes = cx({
+    var tileClasses = cx({
       'boggle-tile': true,
-      'boggle-tile-selected': _.contains(this.props.letterHistory, this),
-      'box-scene': true
+      'box-transform-container': true
     });
+
+    var boxClasses = cx({
+      "box": true,
+      "select" : _.contains(this.props.letterHistory, this),
+      "unselect": !(_.contains(this.props.letterHistory, this))
+
+    })
+
     return (
-      <div className={classes} onClick={this.handleClick}>
-        <div className='box' >
+      <div className={tileClasses} onClick={this.handleClick} >
+        <div className={boxClasses}  >
             <div className='front face'>
                 {this.state.letter}
             </div>
