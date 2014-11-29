@@ -8,7 +8,7 @@ body {
     padding: 5px;
 }
 
-.text-columns {
+.submission-columns {
    -moz-column-count: 3;
    -moz-column-gap: 20px;
    -webkit-column-count: 3;

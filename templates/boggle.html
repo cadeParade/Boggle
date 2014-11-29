@@ -143,37 +143,54 @@ var BoggleBoard = React.createClass({
           </div>
 
           <div className="large-8 columns">
-            <div className="panel submissions-box ">
-            <div className="submissions-title">
-              <h3>Submissions</h3>
-            </div>
               <SubmissionsBox submissions={this.state.submittedWords} />
-            </div>
 
-          <div className="row">
-              <div className="large-6 small-6 columns">
-                  <button onClick={this.handleSubmit}>Submit</button>
-              </div>
+              <div className="row">
+                  <div className="large-6 small-6 columns">
+                      <button onClick={this.handleSubmit}>Submit</button>
+                  </div>
 
-              <div className="large-6 small-6 columns">
-                  <button onClick={this.handleFinalSubmit}>Score me</button>
+                  <div className="large-6 small-6 columns">
+                      <button onClick={this.handleFinalSubmit}>Score me</button>
+                  </div>
               </div>
-          </div>
           </div>
         </div>
     </div>
+
+    <Timer endGame={this.handleFinalSubmit} />
   </div>
 
-
-
-      // <div className="full-board">
-       
-        
-      // </div>
     )
   }
 
 });
+
+var Timer = React.createClass({
+  getInitialState: function() {
+    return {secondsElapsed: 0};
+  },
+  tick: function() {
+    if(this.state.secondsElapsed === 5) {
+      this.props.endGame();
+    }
+    else{
+      this.setState({secondsElapsed: this.state.secondsElapsed + 1});
+    }
+  },
+  componentDidMount: function() {
+    this.interval = setInterval(this.tick, 1000);
+  },
+  componentWillUnmount: function() {
+    clearInterval(this.interval);
+  },
+  render: function() {
+    return (
+      <div>Seconds Elapsed: {this.state.secondsElapsed}</div>
+    );
+  }
+});
+
 
 var SubmissionsBox = React.createClass({
   render: function() {
@@ -182,7 +199,14 @@ var SubmissionsBox = React.createClass({
       submissions.push(<div>{word}</div>)
     })
     return(
-      <div className="boggle-submissions text-columns">{submissions}</div>
+      <div className="panel submissions-box ">
+        <div className="submissions-title">
+          <h3>Submissions</h3>
+        </div>
+        <div className="submission-columns">
+          {submissions}
+        </div>
+      </div>
       )
   }
 })
