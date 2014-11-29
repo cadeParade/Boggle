@@ -39,7 +39,41 @@ body {
     -ms-user-select:none;
     user-select:none;
 }
+.no-click {
+    pointer-events: none;
+}
 
+.hidden {
+    font-size: 0;
+    visibility: hidden;
+    display: none;
+}
+.overlay-bg {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background-color:rgba(0, 0, 0, 0.85);
+    background: black repeat scroll transparent\9; /* ie fallback png background image */
+    z-index:9999;
+}
+.display-flex {
+    display: flex;
+}
+.margin-auto {
+    margin: auto;
+}
+
+.final-score {
+    height: 300px;
+    width: 50%;
+    background-color: white;
+}
+
+.inset-contents {
+    margin-top: 50px;
+}
 
 /* container for box */
 .box-transform-container {

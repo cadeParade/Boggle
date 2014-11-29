@@ -42,7 +42,8 @@ var BoggleBoard = React.createClass({
     return({
       letterHistory: [],
       submittedWords: [],
-      finalScore: 0
+      finalScore: 0,
+      gameIsFinished: false
     })
   },
   selectNewLetter: function(latestLetter) {
@@ -114,6 +115,14 @@ var BoggleBoard = React.createClass({
     })
     this.setState({finalScore: finalScore,
                    submittedWords: []});
+    this.endGame();
+  },
+  endGame: function() {
+    this.setState({gameIsFinished: true})
+    // display final score
+    // stop timer
+    // grey out board
+    // display button to play again
   },
   render: function() {
     var numRows = 5,
@@ -128,12 +137,13 @@ var BoggleBoard = React.createClass({
                            letterHistory={_this.state.letterHistory}
                            rowNum={num}
                            numCols={numCols}
-                           tiles={tiles[num]} />)
+                           tiles={tiles[num]}
+                           gameIsFinished={_this.state.gameIsFinished} />)
     })
+
     return (
   <div className="row">
-
-
+    <EndGameOverlay gameIsFinished={this.state.gameIsFinished} finalScore={this.state.finalScore} />
     <div className="large-12 columns">
         <div className="row">
           <div className="large-4 columns">
@@ -149,7 +159,6 @@ var BoggleBoard = React.createClass({
                   <div className="large-6 small-6 columns">
                       <button onClick={this.handleSubmit}>Submit</button>
                   </div>
-
                   <div className="large-6 small-6 columns">
                       <button onClick={this.handleFinalSubmit}>Score me</button>
                   </div>
@@ -157,21 +166,53 @@ var BoggleBoard = React.createClass({
           </div>
         </div>
     </div>
-
     <Timer endGame={this.handleFinalSubmit} />
   </div>
-
     )
   }
-
 });
+
+var EndGameOverlay = React.createClass({
+  handleReplay: function() {
+    location.reload();
+  },
+  render: function() {
+    var bgClasses = cx({
+      "overlay-bg":this.props.gameIsFinished,
+      "hidden": !this.props.gameIsFinished,
+      "display-flex": true
+    })
+    var insetClasses = cx({
+      "final-score": this.props.gameIsFinished,
+      "hidden": !this.props.gameIsFinished,
+      "margin-auto": true,
+    })
+    var buttonClasses = cx({
+      "hidden": !this.props.gameIsFinished,
+      "replay-button": true,
+      "margin-auto": true
+    })
+    return(
+      <div className={bgClasses}>
+        <div className={insetClasses}>
+          <div className="inset-container display-flex">
+            <div className="margin-auto inset-contents">
+              <h1>FINAL SCORE: {this.props.finalScore}</h1>
+              <button className={buttonClasses} onClick={this.handleReplay} >Replay?</button></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+})
 
 var Timer = React.createClass({
   getInitialState: function() {
     return {secondsElapsed: 0};
   },
   tick: function() {
-    if(this.state.secondsElapsed === 5) {
+    if(this.state.secondsElapsed === 60) {
+      clearInterval(this.interval);
       this.props.endGame();
     }
     else{
@@ -221,7 +262,8 @@ var BoggleRow = React.createClass({
                                 letterHistory={_this.props.letterHistory}
                                 rowNum={_this.props.rowNum}
                                 colNum={num}
-                                tile={_this.props.tiles[num]} />)
+                                tile={_this.props.tiles[num]}
+                                gameIsFinished={_this.props.gameIsFinished} />)
     })
     return(
       <div className="boggle-row">{rowTiles}</div>
@@ -286,14 +328,14 @@ var BoggleTile = React.createClass({
   render: function() {
     var tileClasses = cx({
       'boggle-tile': true,
-      'box-transform-container': true
+      'box-transform-container': true,
+      "no-click": this.props.gameIsFinished
     });
 
     var boxClasses = cx({
       "box": true,
       "select" : _.contains(this.props.letterHistory, this),
       "unselect": !(_.contains(this.props.letterHistory, this))
-
     })
 
     return (
@@ -320,7 +362,7 @@ var tiles = [["a","a","a","f","r","s"],
             ["a","e","e","g","m","u"],
             ["a","e","g","m","n","n"],
             ["a","f","i","r","s","y"],
-            ["b","j","k","q","x","z"],
+            ["b","j","k","qu","x","z"],
             ["c","c","e","n","s","t"],
             ["c","e","i","i","l","t"],
             ["c","e","i","l","p","t"],
