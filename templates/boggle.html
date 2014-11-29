@@ -75,13 +75,12 @@ var BoggleBoard = React.createClass({
   handleSubmit: function() {
     var submission = this.makeWordFromHistory()
     var _this = this;
-
     if(submission.length < 3 || this.isDuplicate(submission)){
       this.clearSelection();
     }
     else {
       $.post('/check_word', {word: submission}, function(isWord){
-        if(isWord === "True"){
+        if(isWord.isValidWord === true){
           var submissionState = _this.state.submittedWords;
           submissionState.push(submission);
           submissionState.sort();

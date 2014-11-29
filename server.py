@@ -1,6 +1,7 @@
-from flask import Flask, request, session, render_template, g, redirect, url_for, flash
+from flask impo rt Flask, request, session, render_template, g, redirect, url_for, flash
 import jinja2
 import os
+import json
 
 app = Flask(__name__)
 app.secret_key = '\xf5!\x07!qj\xa4\x08\xc6\xf8\n\x8a\x95m\xe2\x04g\xbb\x98|U\xa2f\x03'
@@ -27,6 +28,11 @@ def parse_dict(fp):
     word_dict[line] = True
   return word_dict
 
+# def parse_dict_json():
+#   word_dict = parse_dict('wordsEn.txt')
+#   with open("wordDict.json", "w") as outfile:
+#     json.dump(word_dict, outfile)
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(debug=True, port=port)
+    app.run(debug=True, port=port, host="0.0.0.0")
