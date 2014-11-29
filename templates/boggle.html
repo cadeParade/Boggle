@@ -28,6 +28,13 @@
 
 </style>
 <script type="text/jsx">
+// things to add
+//border around boggle-board
+// timer
+//flash red when submit wrong word (maybe button)
+// clear board on score me click
+// columms in submissions box
+
 var cx = React.addons.classSet;
 
 var BoggleBoard = React.createClass({
@@ -76,6 +83,7 @@ var BoggleBoard = React.createClass({
         if(isWord === "True"){
           var submissionState = _this.state.submittedWords;
           submissionState.push(submission);
+          submissionState.sort();
           _this.setState({
             letterHistory: [],
             submittedWords: submissionState
@@ -135,23 +143,20 @@ var BoggleBoard = React.createClass({
           </div>
 
           <div className="large-8 columns">
-            <h3 className="show-for-small">Header<hr/></h3>
-            <div className="panel">
+            <div className="panel submissions-box ">
+            <div className="submissions-title">
+              <h3>Submissions</h3>
+            </div>
               <SubmissionsBox submissions={this.state.submittedWords} />
             </div>
 
           <div className="row">
               <div className="large-6 small-6 columns">
-                <div className="panel">
                   <button onClick={this.handleSubmit}>Submit</button>
-                </div>
               </div>
 
               <div className="large-6 small-6 columns">
-                <div className="panel">
-        <button onClick={this.handleFinalSubmit}>Score me</button>
-
-                </div>
+                  <button onClick={this.handleFinalSubmit}>Score me</button>
               </div>
           </div>
           </div>
@@ -177,7 +182,7 @@ var SubmissionsBox = React.createClass({
       submissions.push(<div>{word}</div>)
     })
     return(
-      <div className="boggle-submissions">Submissions: {submissions}</div>
+      <div className="boggle-submissions text-columns">{submissions}</div>
       )
   }
 })
