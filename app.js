@@ -2,20 +2,40 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var wordDict = require("./wordDict.js").wordDict;
 
 
 app.engine(".html", require("ejs").renderFile);
 app.set("views", __dirname + "/templates");
 app.set('port', process.env.PORT || 3000);
 app.use("/static", express.static(__dirname + "/static"));
+app.use(express.urlencoded());
+app.use(express.json());
+
+
 
 app.get('/', function(req, res){
   res.render('choice.html');
 });
 
+app.get('/one_player', function(req, res) {
+  res.render("boggle.html", {locals:{ players : "onePlayer"}});
+})
+
+app.post("/check_word", function(req, res) {
+  var submission = req.param('word').toLowerCase();
+  res.contentType('json');
+  res.send({ isValidWord: wordDict[submission] === true });
+})
+
+app.get("/two_player", function(req, res) {
+  res.render("boggle.html", {locals:{ players : "twoPlayer" }});
+})
+
+
 
 io.on('connection', function(socket){
-  console.log('a user connected');
+  console.log('a user connected sss');
   socket.on('chat message', function(msg){
     console.log('message: ' + msg);
     io.emit('chat message', msg);
@@ -24,6 +44,8 @@ io.on('connection', function(socket){
     console.log('user disconnected');
   });
 });
+
+
 
 
 http.listen(3000, function(){
@@ -45,7 +67,6 @@ http.listen(3000, function(){
 // var app = express();
 // var fs = require("fs");
 // var path = require("path");
-// var wordDict = require("./wordDict.js").wordDict;
 // var http = require("http").Server(app);
 // var io = require("socket.io")(http);
 
@@ -70,11 +91,5 @@ http.listen(3000, function(){
 
 
 
-
-// app.post("/check_word", function(request, response) {
-//   var submission = request.param('word').toLowerCase();
-//   response.contentType('json');
-//   response.send({ isValidWord: wordDict[submission] === true });
-// })
 
 

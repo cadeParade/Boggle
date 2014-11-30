@@ -21,14 +21,11 @@
 </head>
 <body>
 <div id="content"></div>
-
-
-
-<style type="text/css">
-
-
-
-</style>
+<% if (players) {%>
+  <script>
+  var players = "<%= players %>"
+  </script>
+<% } %>
 <script type="text/jsx">
 // things to add
 //border around boggle-board
@@ -132,6 +129,7 @@ var BoggleBoard = React.createClass({
         tiles = tileSet(),
         _this = this;
         console.log(this.state.finalScore)
+        console.log(this.props.players)
     _.range(numRows).forEach(function(num){
       rows.push(<BoggleRow selectNewLetter={_this.selectNewLetter}
                            unselectLastLetter={_this.unselectLastLetter}
@@ -144,6 +142,7 @@ var BoggleBoard = React.createClass({
 
     return (
   <div className="row">
+  {this.props.players}
     <EndGameOverlay gameIsFinished={this.state.gameIsFinished} finalScore={this.state.finalScore} />
     <div className="large-12 columns">
         <div className="row">
@@ -391,10 +390,9 @@ var tiles = [["a","a","a","f","r","s"],
 }
 
 React.render(
-  <BoggleBoard />,
+  <BoggleBoard players={players}/>,
   document.getElementById('content')
 );
-
 
 </script>
 

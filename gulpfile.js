@@ -14,8 +14,10 @@ gulp.task('sass', function () {
     .pipe(gulp.dest('./static/css/bourbon.css'));
 });
 
+//this is terrible
 // gulp.task('develop', function () {
 //   nodemon({ script: 'app.js', ext: 'html js'})
+//   .pipe(livereload({ auto: false }))
 //     .on('restart', function () {
 //       console.log('restarted!')
 //     })
