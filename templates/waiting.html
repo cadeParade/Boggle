@@ -5,13 +5,16 @@
   <title>Document</title>
   <link href='../static/css/style.css' rel='stylesheet' type='text/css'>
   <link href='../static/css/bourbon.css/style.css' rel='stylesheet' type='text/css'>
+  <script type="text/javascript" src="../static/js/socket.io.min.js"></script>
+  <script type="text/javascript" src="../static/js/jquery-1.10.0.min.js"></script>
 
 </head>
 <body>
   <body>
   <div class="card">
     <div class="card-image">
-      <img src="https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/mountains.png" alt="">
+    <div class="socket-info"></div>
+      <!-- <img src="https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/mountains.png" alt=""> -->
     </div>
     <div class="card-header">
       Your code is XYZ.
@@ -21,5 +24,35 @@
       <p>WAITING.....</p>
     </div>
   </div>
+<script>
+var socket = io();
+
+socket.on("user connected", function(userId) {
+  console.log("userId = ", userId)
+  $(".socket-info").text("current user id: " + userId + " -- waiting for another user");
+})
+
+
+// console.log(socket)
+// $('#chat-submit').submit(function(){
+//   socket.emit('chat message', $('#m').val());
+//   $('#m').val('');
+//   return false;
+// });
+// socket.on('chat message', function(msg){
+//   $('#messages').append($('<li>').text(msg));
+//   board.setState({test: "OMG"})
+// });
+
+// var updatePlayerWordList = function(player, word) {
+//   socket.emit("submit word", player, board.makeWordFromHistory());
+// }
+
+// var endGameBoth = function() {
+//   socket.emit("game over");
+// }
+
+</script>
+
 </body>
 </html>
