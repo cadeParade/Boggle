@@ -1,3 +1,5 @@
+var _ = require('underscore-node');
+
 var tiles = [["a","a","a","f","r","s"],
              ["a","a","e","e","e","e"],
              ["a","a","f","i","r","s"],
@@ -24,4 +26,22 @@ var tiles = [["a","a","a","f","r","s"],
              ["n","o","o","t","u","w"],
              ["o","o","o","t","t","u"]]
 
-module.exports = tiles;
+module.exports = function() {
+      // var tileSet = function(tiles){
+  var shuff_tiles = _.shuffle(tiles),
+      letters = [],
+      arrays = [],
+      size = 5
+
+  shuff_tiles.forEach(function(tile){
+    var randNum = Math.floor(Math.random() * (5 - 0 + 1)) + 0; //random int from 0-5
+    letters.push(tile[randNum] === "qu" ? "Qu" : tile[randNum].toUpperCase())
+  })
+  //makes array of 5 arrays
+  while (letters.length > 0) {
+    arrays.push(letters.splice(0, size));
+  }
+  console.log(arrays)
+  return arrays
+}
+

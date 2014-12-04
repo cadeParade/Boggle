@@ -15,36 +15,17 @@ app.use(express.urlencoded());
 app.use(express.json());
 
 
-
-var tileSet = function(tiles){
-  var shuff_tiles = _.shuffle(tiles),
-      letters = [],
-      arrays = [],
-      size = 5
-
-  shuff_tiles.forEach(function(tile){
-    var randNum = Math.floor(Math.random() * (5 - 0 + 1)) + 0; //random int from 0-5
-    letters.push(tile[randNum] === "qu" ? "Qu" : tile[randNum].toUpperCase())
-  })
-  //makes array of 5 arrays
-  while (letters.length > 0) {
-    arrays.push(letters.splice(0, size));
-  }
-  return arrays
-}
-
-
-
 var playerOneWordList = []
 var playerTwoWordList = []
-var letters = tileSet(tiles);
+var letters = tiles();
+var clients = []
+
 
 app.get('/', function(req, res){
   res.render('choice.html');
 });
 
 app.get('/one_player', function(req, res) {
-  tileSet(tiles);
   res.render("boggle.html", {locals:{ players : "onePlayer"}});
 })
 
@@ -65,7 +46,6 @@ app.get("/two_player", function(req, res) {
 //                playerTwo: {id: "none", wordList: []}};
 
 
-var clients = []
 
 io.on('connection', function(socket){
   var userId = socket.id
@@ -114,38 +94,6 @@ http.listen(3000, function(){
 // when other person connects, push them to game page
 // shared view is board and timer, not selected letters or submitted words
 // on timeup, score and display who won
-
-
-
-
-
-
-
-// var express = require("express");
-// var app = express();
-// var fs = require("fs");
-// var path = require("path");
-// var http = require("http").Server(app);
-// var io = require("socket.io")(http);
-
-// app.listen(3000, function() {
-//   console.log("listening on port 3000");
-// });
-// app.set("view engine", "ejs");
-// app.set("views", __dirname + "/templates");
-// app.engine(".html", require("ejs").renderFile);
-// app.use("/static", express.static(__dirname + "/static"));
-// app.use(express.urlencoded());
-// app.use(express.json());
-
-
-// app.get("/", function(req, res) {
-//   res.render("chat.html")
-// })
-
-// io.on('connection', function(socket){
-//   console.log('a user connected');
-// });
 
 
 
