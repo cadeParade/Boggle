@@ -1,17 +1,26 @@
 /** @jsx React.DOM */
 var React = require('react/addons');
+var $ = require('jquery');
+var _ = require('underscore');
+var tileSet = require('../js/tiles.js')
 
 var cx = React.addons.classSet;
 
 
 var BoggleBoard = React.createClass({
   getInitialState: function() {
+    if ( this.props.type === "onePlayer") {
+      var tiles = tileSet();
+    }
+    else {
+      var tiles = []
+    }
     return({
       letterHistory: [],
       submittedWords: [],
       finalScore: 0,
       gameIsFinished: false,
-      test: "test"
+      letters: tiles
     })
   },
   selectNewLetter: function(latestLetter) {
@@ -52,7 +61,6 @@ var BoggleBoard = React.createClass({
           var submissionState = _this.state.submittedWords;
           submissionState.push(submission);
           submissionState.sort();
-          updatePlayerWordList(_this.props.players, submission)
           _this.setState({
             letterHistory: [],
             submittedWords: submissionState
@@ -86,7 +94,7 @@ var BoggleBoard = React.createClass({
     this.endGame();
   },
   endGame: function() {
-    this.setState({gameIsFinished: true})
+    this.setState({gameIsFinished: true});
     // display final score
     // stop timer
     // grey out board
@@ -96,23 +104,20 @@ var BoggleBoard = React.createClass({
     var numRows = 5,
         numCols = 5,
         rows = [],
-        tiles = tileSet(),
+        // tiles = tileSet(),
         _this = this;
-        console.log(this.state.finalScore)
-        console.log(this.props.players)
+        // console.log(this.state.finalScore)
     _.range(numRows).forEach(function(num){
       rows.push(<BoggleRow selectNewLetter={_this.selectNewLetter}
                            unselectLastLetter={_this.unselectLastLetter}
                            letterHistory={_this.state.letterHistory}
                            rowNum={num}
                            numCols={numCols}
-                           tiles={tiles[num]}
+                           letters={_this.state.letters[num]}
                            gameIsFinished={_this.state.gameIsFinished} />)
     })
-
     return (
   <div className="row">
-  {this.props.players}<br/>
   {this.state.test}
     <EndGameOverlay gameIsFinished={this.state.gameIsFinished} finalScore={this.state.finalScore} />
     <div className="large-12 columns">
@@ -179,10 +184,11 @@ var EndGameOverlay = React.createClass({
 
 var Timer = React.createClass({
   getInitialState: function() {
-    return {secondsElapsed: 0};
+    return {secondsElapsed: 0,
+            totalTime: 100};
   },
   tick: function() {
-    if(this.state.secondsElapsed === 500) {
+    if(this.state.secondsElapsed === this.state.totalTime) {
     // if(this.state.secondsElapsed === 60) {
       clearInterval(this.interval);
       this.props.endGame();
@@ -199,7 +205,7 @@ var Timer = React.createClass({
   },
   render: function() {
     return (
-      <div>Seconds Elapsed: {this.state.secondsElapsed}</div>
+      <div>Seconds Remaining: {this.state.totalTime - this.state.secondsElapsed}</div>
     );
   }
 });
@@ -229,12 +235,13 @@ var BoggleRow = React.createClass({
     var rowTiles = [];
     var _this = this;
     _.range(this.props.numCols).forEach(function(num) {
+      var letter = _this.props.letters === undefined ?  "" : _this.props.letters[num];
       rowTiles.push(<BoggleTile selectNewLetter={_this.props.selectNewLetter}
                                 unselectLastLetter={_this.props.unselectLastLetter}
                                 letterHistory={_this.props.letterHistory}
                                 rowNum={_this.props.rowNum}
                                 colNum={num}
-                                tile={_this.props.tiles[num]}
+                                letter={letter}
                                 gameIsFinished={_this.props.gameIsFinished} />)
     })
     return(
@@ -245,10 +252,13 @@ var BoggleRow = React.createClass({
 
 var BoggleTile = React.createClass({
   getInitialState: function() {
-    var randNum = Math.floor(Math.random() * (5 - 0 + 1)) + 0; //random int from 0-5
     return({
-      letter: this.props.tile[randNum].toUpperCase(),
+      letter: this.props.letter,
+      // letter: this.props.tile[randNum].toUpperCase(),
     })
+  },
+  componentWillReceiveProps: function(nextProps) {
+    this.setState({letter: nextProps.letter})
   },
   checkAdjacency: function(latestLetter) {
     var currRow = this.props.rowNum;
@@ -325,43 +335,4 @@ var BoggleTile = React.createClass({
   }
 });
 
-var tileSet = function(){
-var tiles = [["a","a","a","f","r","s"],
-            ["a","a","e","e","e","e"],
-            ["a","a","f","i","r","s"],
-            ["a","d","e","n","n","n"],
-            ["a","e","e","e","e","m"],
-            ["a","e","e","g","m","u"],
-            ["a","e","g","m","n","n"],
-            ["a","f","i","r","s","y"],
-            ["b","j","k","qu","x","z"],
-            ["c","c","e","n","s","t"],
-            ["c","e","i","i","l","t"],
-            ["c","e","i","l","p","t"],
-            ["c","e","i","p","s","t"],
-            ["d","d","h","n","o","t"],
-            ["d","h","h","l","o","r"],
-            ["d","h","l","n","o","r"],
-            ["d","h","l","n","o","r"],
-            ["e","i","i","i","t","t"],
-            ["e","m","o","t","t","t"],
-            ["e","n","s","s","s","u"],
-            ["f","i","p","r","s","y"],
-            ["g","o","r","r","v","w"],
-            ["i","p","r","r","r","y"],
-            ["n","o","o","t","u","w"],
-            ["o","o","o","t","t","u"]]
-
-  var shuff_tiles = _.shuffle(tiles);
-  var arrays = [],
-      size = 5;
-
-  while (shuff_tiles.length > 0)
-      arrays.push(shuff_tiles.splice(0, size));
-  return arrays
-}
-
-var board = React.render(
-  <BoggleBoard players={"<%= players %>"}/>,
-  document.getElementById('content')
-);
+module.exports = BoggleBoard

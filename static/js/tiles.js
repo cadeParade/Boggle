@@ -41,7 +41,7 @@ module.exports = function() {
   while (letters.length > 0) {
     arrays.push(letters.splice(0, size));
   }
-  console.log(arrays)
+  console.log(arrays, "arrays?")
   return arrays
 }
 

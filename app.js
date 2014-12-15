@@ -4,7 +4,7 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var wordDict = require("./wordDict.js").wordDict;
-var tiles = require("./tiles.js");
+var tiles = require("./static/js/tiles.js");
 
 
 app.engine(".html", require("ejs").renderFile);
