@@ -7,14 +7,26 @@
     "socket.io": "^1.2.1"
   },
   "devDependencies": {
+    "browserify": "~4.2.2",
     "ejs": "^1.0.0",
     "express-ws": "^0.2.1",
     "gulp": "^3.8.10",
+    "gulp-concat": "^2.4.2",
     "gulp-nodemon": "^1.0.4",
+    "gulp-notify": "^2.1.0",
+    "gulp-react": "^2.0.0",
     "gulp-sass": "^1.1.0",
+    "gulp-util": "^3.0.1",
+    "jquery": "^2.1.1",
     "node-bourbon": "^1.2.3",
     "node-neat": "^1.3.0",
+    "react": "^0.12.1",
+    "reactify": "^0.17.1",
+    "socket.io-client": "^1.2.1",
     "supervisor": "^0.6.0",
-    "underscore-node": "^0.1.2"
+    "underscore": "^1.7.0",
+    "underscore-node": "^0.1.2",
+    "vinyl-source-stream": "^1.0.0",
+    "watchify": "~0.10.2"
   }
 }

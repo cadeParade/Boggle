@@ -6,25 +6,12 @@
   <link href="../static/css/foundation.min.css" rel="stylesheet" type="text/css">
   <link href='../static/css/style.css' rel='stylesheet' type='text/css'>
 
-  <script type="text/javascript" src="../static/js/react-with-addons.min.js"></script>
-  <script type="text/javascript" src="../static/js/jsxTransformer.js"></script>
-  <script type="text/javascript" src="../static/js/jquery-1.10.0.min.js"></script>
-  <script type="text/javascript" src="../static/js/underscore.min.js"></script>
-  <script type="text/javascript" src="../static/js/foundation.min.js"></script>
-  <script type="text/javascript" src="../static/js/socket.io.min.js"></script>
-  <script type="text/javascript" src="../static/js/websockets.js"></script>
+  <script type="text/javascript" src="../static/js/dist/bundle.js"></script>
 
-  <!-- <script src="http://fb.me/react-0.12.1.js"></script> -->
-  <!-- <script src = "http://cdnjs.cloudflare.com/ajax/libs/react/0.12.1/react-with-addons.min.js"></script>
-  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.4.7/js/foundation.min.js"></script>
-  <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-  <script src="http://fb.me/JSXTransformer-0.12.1.js"></script>
-  <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script> 
-  <link href='http://cdnjs.cloudflare.com/ajax/libs/foundation/5.4.7/css/foundation.min.css' rel='stylesheet' type='text/css'>-->
 </head>
 <body>
 <div id="content"></div>
+
 <script type="text/jsx">
 // things to add
 //flash red when submit wrong word (maybe button)
@@ -358,6 +345,7 @@ var BoggleTile = React.createClass({
   }
 });
 
+// var app = React.render(<App />);
 
 var board = React.render(
   <BoggleBoard players={"<%= players %>"}/>,
@@ -371,6 +359,8 @@ socket.on('user connected', function(userId, letters){
   console.log(userId, letters)
   board.setState({letters: letters})
 });
+
+socket.emit('join room', 'funlandia')
 
 
 

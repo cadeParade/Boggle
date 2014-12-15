@@ -5,34 +5,79 @@
   <title>ZOMG BOGGLE</title>
   <link href='../static/css/style.css' rel='stylesheet' type='text/css'>
   <link href='../static/css/bourbon.css/style.css' rel='stylesheet' type='text/css'>
+  <script type="text/javascript" src="../static/js/jquery-1.10.0.min.js"></script>
+  <script type="text/javascript" src="../static/js/socket.io.min.js"></script>
+  <script type="text/javascript" src="../static/js/websockets.js"></script>
 
 </head>
 <body>
-  <div class="cards">
-  <a href="/one_player"><div class="card">
-    <div class="card-image">
-      <img src="https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/mountains.png" alt="">
-    </div>
-    <div class="card-header">
-      One Player?
-    </div>
-    <div class="card-copy">
-      <p>And then there was one.</p>
-    </div>
-  </div></a>
+<div class="cards">
+<table>
+  <tr>
+    <td>
+      <a href="/one_player"><div class="card">
+        <div class="card-image">
+          <img src="https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/mountains.png" alt="">
+        </div>
+        <div class="card-header">
+          One Player?
+        </div>
+        <div class="card-copy">
+          <p>And then there was one.</p>
+        </div>
+      </div></a>
+    </td>
+    <td>
+      <a href="/two_player" id="twoPlayerCreate"><div class="card">
+        <div class="card-image">
+          <img src="https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/mountains-4.png" alt="">
+        </div>
+        <div class="card-header">
+          Two Player Start?
+        </div>
+        <div class="card-copy">
+          <p>Two two two clever phrase</p>
+        </div>
+      </div></a>
+    </td>
+    <td>
+      <a href="/join_multiplayer" id="twoPlayerJoin"><div class="card">
+        <div class="card-image">
+          <img src="https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/mountains-4.png" alt="">
+        </div>
+        <div class="card-header">
+          Two Player Join?
+        </div>
+        <div class="card-copy">
+          <p>Two two two clever phrase</p>
+        </div>
+      </div></a>
+    </td>
+  </tr>
+</table>
 
-  <a href="/two_player"><div class="card">
-    <div class="card-image">
-      <img src="https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/mountains-4.png" alt="">
-    </div>
-    <div class="card-header">
-      Two Player?
-    </div>
-    <div class="card-copy">
-      <p>Two two two clever phrase</p>
-    </div>
-  </div></a>
+
 </div>
+
+<script>
+    var socket = io();
+
+    $("#twoPlayerCreate").click(function(e) {
+      e.preventDefault();
+      console.log(":create");
+      socket.emit('join room', 'funlandia');
+    })
+
+    socket.on("go to waiting room", function() {
+      console.log("go to waiting room");
+      $("body").html("You are in the waiting room")
+    })
+  // $("#twoPlayerJoin").click(function(e) {
+  //   e.preventDefault()
+  //   console.log(":join")
+  //   $.get("/join_multiplayer")
+  // })
+</script>
 
 </body>
 </html>

@@ -1,7 +1,32 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var bourbon = require('node-bourbon');
-var nodemon = require('gulp-nodemon');
+var react = require('gulp-react');
+var gutil = require('gulp-util');
+var source = require('vinyl-source-stream');
+var watchify = require('watchify');
+var browserify = require('browserify');
+var reactify = require('reactify');
+var notify = require("gulp-notify");
+
+
+gulp.task('app', function() {
+  var bundler = watchify(browserify('./static/jsx/main.jsx', watchify.args));
+  bundler.transform('reactify');
+  bundler.on('update', rebundle);
+
+  function rebundle() {
+    return bundler.bundle({ debug: true })
+      .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+      .on('error', notify.onError(function (error) {
+        return error.message;
+      }))
+      .pipe(source('bundle.js'))
+      .pipe(gulp.dest('./static/js/dist/'));
+  }
+
+  return rebundle();
+});
 
 
 gulp.task('sass', function () {
@@ -14,22 +39,10 @@ gulp.task('sass', function () {
     .pipe(gulp.dest('./static/css/bourbon.css'));
 });
 
-//this is terrible
-// gulp.task('develop', function () {
-//   nodemon({ script: 'app.js', ext: 'html js'})
-//   .pipe(livereload({ auto: false }))
-//     .on('restart', function () {
-//       console.log('restarted!')
-//     })
-// })
-
 // Watch Files For Changes
 gulp.task('watch', function() {
-    // gulp.watch('js/*.js', ['lint', 'scripts']);
     gulp.watch('./static/scss/*', ['sass']);
-    gulp.watch('./*.js', ['develop']);
 });
 
 // Default Task
-gulp.task('default', ['sass', 'watch']);
-// gulp.task('default', ['sass', 'develop', 'watch']);
+gulp.task('default', ['watch', 'app']);

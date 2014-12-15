@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <script type="text/javascript" src="../static/js/jquery-1.10.0.min.js"></script>
+  <script type="text/javascript" src="../static/js/socket.io.min.js"></script>
+  <script type="text/javascript" src="../static/js/websockets.js"></script>
+</head>
+<body>
+  <div class="error"></div>
+  <form>
+    <label for="room_name">Room name?</label>
+      <input id="roomName" name="room_name" type="text" />
+    <button id="joinRoom" type="submit">Submit</button>
+  </form>
+
+  <script>
+    var socket = io();
+    $("#joinRoom").click(function(e) {
+      e.preventDefault()
+      var roomName = $("#roomName").val()
+      console.log("join room", $("#roomName").val())
+      socket.emit("request room join", roomName)
+    });
+
+    socket.on("room does not exist", function(msg) {
+      $(".error").text("Room does not exist").css("color", "red")
+    });
+
+    socket.on("joined room", function(roomId) {
+      $.get("/waiting_room")
+    })
+
+
+  </script>
+</body>
+</html>
