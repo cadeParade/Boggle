@@ -66,17 +66,23 @@ io.on('connection', function(socket){
   io.emit("user connected", userId, letters)
 
   socket.on('join room', function(roomId) {
+    console.log('socket id', socket.id)
+    
     socket.join(roomId);
-    io.emit("go to waiting room");
-
+    console.log(io.sockets.adapter.rooms)
   })
 
+
+
+
   socket.on("request room join", function(roomId) {
-    // console.log(socket.id, "requesting to join", roomId);
-    // console.log("existing rooms = ", io.sockets.adapter.rooms)
+    console.log(socket.id, "requesting to join", roomId);
+    console.log("existing rooms = ", io.sockets.adapter.rooms)
     if( roomId in io.sockets.adapter.rooms ) {
       socket.join(roomId)
       io.emit("joined room", roomId)
+      console.log('joined')
+    console.log("existing rooms = ", io.sockets.adapter.rooms)
     }
     else {
       io.emit("room does not exist", roomId)

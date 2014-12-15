@@ -28,10 +28,10 @@ var App = React.createClass({
       var page = <ChoicePage updatePageView={this.updatePageView} userId={this.props.userId}/>
     }
     else if (this.state.view === "WaitingRoom") {
-      var page = <WaitingRoom updatePageView={this.updatePageView}  userId={this.props.userId}/>
+      var page = <WaitingRoom updatePageView={this.updatePageView} socket={this.props.socket} userId={this.props.userId}/>
     }
     else if (this.state.view === "JoinRoom") {
-      var page = <JoinRoom updatePageView={this.updatePageView}  userId={this.props.userId}/>
+      var page = <JoinRoom updatePageView={this.updatePageView} socket={this.props.socket} userId={this.props.userId}/>
     }
     else if (this.state.view === "OnePlayer") {
       var page = <BoggleView type="onePlayer" />
@@ -45,6 +45,10 @@ var App = React.createClass({
 
 
   var socket = io();
+
+  socket.createRoom = function(roomName){socket.emit('join room', roomName)}
+  socket.requestRoomJoin = function(roomName){socket.emit('request room join', roomName)}
+
   var userId = ""
   socket.emit('request user id');
 

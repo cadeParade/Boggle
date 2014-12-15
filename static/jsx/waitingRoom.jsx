@@ -1,13 +1,13 @@
 /** @jsx React.DOM */
 var React = require('react/addons');
-var io = require('socket.io-client');
 
 var WaitingRoom = React.createClass({
   getInitialState: function() {
     var roomName = Math.random().toString(36).substring(2,7);
-    return {roomName: roomName,
-        you: this.props.userId,
-        users: [this.props.userId]}
+    this.props.socket.createRoom(roomName)
+    return ({roomName: roomName,
+            you: this.props.userId,
+            users: [this.props.userId]});
 
   },
   backToChoice: function() {

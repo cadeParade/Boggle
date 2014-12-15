@@ -6,7 +6,10 @@ var JoinRoom = React.createClass({
     return {roomName: ""}
   },
   handleJoinRoomRequest: function() {
-    this.props.updatePageView("ChoicePage");
+    console.log('clicked', this.state.roomName)
+    this.props.socket.requestRoomJoin(this.state.roomName);
+    // this.props.updatePageView("ChoicePage");
+
   },
   handleTyping: function() {
     this.setState({roomName: event.target.value});
