@@ -4,15 +4,11 @@ var React = require('react/addons');
 var ChoicePage = React.createClass({
   handleStartOnePlayer: function() {
     this.props.updatePageView("OnePlayer")
-    console.log("start one player")
   },
   handleStartMultiPlayer: function() {
-    console.log("start multi player");
-    console.log(this.props)
     this.props.updatePageView("WaitingRoom")
   },
   handleJoinMultiPlayer: function() {
-    console.log("join multi player")
     this.props.updatePageView("JoinRoom");
   },
   render: function() {

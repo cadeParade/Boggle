@@ -83,6 +83,12 @@ io.on('connection', function(socket){
     }
   })
 
+
+  socket.on('request user id', function() {
+    console.log('requesting user id', socket.id);
+    io.emit('return user id', socket.id)
+  })
+
   socket.on('submit word', function(user, word) {
     console.log("clients", clients)
     console.log("user: ", user, ", word: ", word);
