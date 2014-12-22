@@ -26,7 +26,7 @@ var tiles = [["a","a","a","f","r","s"],
              ["n","o","o","t","u","w"],
              ["o","o","o","t","t","u"]]
 
-module.exports = function() {
+var generateTileSet = function() {
       // var tileSet = function(tiles){
   var shuff_tiles = _.shuffle(tiles),
       letters = [],
@@ -45,3 +45,4 @@ module.exports = function() {
   return arrays
 }
 
+module.exports = generateTileSet;

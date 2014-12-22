@@ -6,6 +6,10 @@ var WaitingRoom = React.createClass({
   backToChoice: function() {
     this.props.updatePageView("ChoicePage");
   },
+  handleStartGame: function() {
+    console.log('starting game')
+    this.props.game.startGame();
+  },
   render: function() {
     var users = []
     this.props.game.users.forEach(function(userId) {
@@ -20,6 +24,7 @@ var WaitingRoom = React.createClass({
         </ul></div>
         <p>... waiting on other people to join...</p>
         <p>... dont you have any friends? ...</p>
+        <div><button onClick={this.handleStartGame}>Start Game </button></div>
         <button onClick={this.backToChoice}>Back to choice </button>
       </div>
     )

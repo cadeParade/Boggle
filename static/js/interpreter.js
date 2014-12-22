@@ -3,6 +3,7 @@
 var Game = function(socket) {
   this.socket = socket;
   this.users = [];
+  this.tiles = [];
   // this.roomName
   // this.app
 
@@ -19,6 +20,10 @@ var Game = function(socket) {
     _this.app.setState({game: _this})
   })
 
+  this.socket.on('start game', function(tiles) {
+    _this.app.setState({view: "multiPlayer", tiles: tiles})
+  })
+
 // notifications
 // show someone left room
 // game ended
@@ -32,6 +37,7 @@ var Game = function(socket) {
 Game.prototype.createRoom = function() {
   // var roomName = Math.random().toString(36).substring(2,7);
   roomName = "funlandia"
+  _this = this;
   this.roomName = roomName;
   this.socket.emit('create room', roomName);
   console.log('created room', roomName);
@@ -50,6 +56,12 @@ Game.prototype.joinRoom = function(roomName) {
       console.log("you fail");
     }
   });
+};
+
+Game.prototype.startGame = function() {
+  this.socket.emit('start game for all room users', this.roomName, function(idk) {
+    console.log(idk)
+  })
 };
 // you played word
 

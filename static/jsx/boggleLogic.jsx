@@ -12,6 +12,9 @@ var BoggleBoard = React.createClass({
     if ( this.props.type === "onePlayer") {
       var tiles = tileSet();
     }
+    else if ( this.props.type === "multiPlayer") {
+      var tiles = this.props.tiles;
+    }
     else {
       var tiles = []
     }

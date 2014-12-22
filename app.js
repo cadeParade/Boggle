@@ -21,6 +21,7 @@ var letters = tiles();
 var clients = []
 
 
+
 app.get('/', function(req, res){
   res.render('choice.html');
 });
@@ -44,13 +45,11 @@ io.on('connection', function(socket){
   })
 
   // create room
-  socket.on('create room', function(roomId) {
+  socket.on('create room', function(roomId, fn) {
     socket.join(roomId);
     console.log("existing rooms when creating room = ", io.sockets.adapter.rooms)
-    // emit make room 
   })
 
-  // does room exist
 
   // join room
   socket.on("request room join", function(roomId, fn) {
@@ -69,10 +68,22 @@ io.on('connection', function(socket){
     else {fn(false)}
   })
 
+  socket.on('start game for all room users', function(roomId) {
+    socket.emit("start game");
+    var tiles = generateTiles();
+    socket.to(roomId).emit("start game", tiles);
+    socket.emit("start game", tiles);
+
+  })
+
 
   var roomExists = function(roomId) {
     console.log("does this room exist?",io.sockets.adapter.rooms )
     return (roomId in io.sockets.adapter.rooms );
+  }
+
+  var generateTiles = function() {
+    return(tiles());
   }
 
   socket.on('submit word', function(user, word) {
