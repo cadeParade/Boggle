@@ -36,49 +36,39 @@ app.post("/check_word", function(req, res) {
   res.send({ isValidWord: wordDict[submission] === true });
 })
 
+// handle user connections and actions
 io.on('connection', function(socket){
 
-  //get user id
   socket.on('request user id', function(fn) {
-    console.log('requesting user id', socket.id);
     fn(socket.id)
   })
 
-  // create room
   socket.on('create room', function(roomId, fn) {
     socket.join(roomId);
-    console.log("existing rooms when creating room = ", io.sockets.adapter.rooms)
   })
 
-
-  // join room
   socket.on("request room join", function(roomId, fn) {
-    console.log("asking for room id: " + roomId);
     if(roomExists(roomId)) {
       socket.join(roomId);
-      console.log("existing rooms when requesting join= ", io.sockets.adapter.rooms);
-      console.log("keys?", Object.keys(io.sockets.adapter.rooms[roomId]));
-
-      socket.to(roomId).emit("user joined room", Object.keys(io.sockets.adapter.rooms[roomId]))
-      socket.emit("user joined room", Object.keys(io.sockets.adapter.rooms[roomId]))
+      emitToRoom(roomId, 'user joined room', Object.keys(io.sockets.adapter.rooms[roomId]))
       fn(true);
-      //for each user in roomId
-      // emit event to all sockets (users) in the room that another user joined the room
     }
     else {fn(false)}
   })
 
   socket.on('start game for all room users', function(roomId) {
-    socket.emit("start game");
     var tiles = generateTiles();
-    socket.to(roomId).emit("start game", tiles);
-    socket.emit("start game", tiles);
-
+    emitToRoom(roomId, 'start game', tiles);
   })
 
 
+  //helper functions
+  var emitToRoom = function(roomId, action, data) {
+    socket.to(roomId).emit(action, data);
+    socket.emit(action, data);
+  }
+
   var roomExists = function(roomId) {
-    console.log("does this room exist?",io.sockets.adapter.rooms )
     return (roomId in io.sockets.adapter.rooms );
   }
 
@@ -86,13 +76,7 @@ io.on('connection', function(socket){
     return(tiles());
   }
 
-  socket.on('submit word', function(user, word) {
-    console.log("clients", clients)
-    console.log("user: ", user, ", word: ", word);
-  })
-  socket.on("game over", function() {
-    console.log("game over")
-  })
+
   socket.on('disconnect', function(){
     console.log("disconnecting")
   });
@@ -100,18 +84,8 @@ io.on('connection', function(socket){
 
 
 
-
 http.listen(3000, function(){
   console.log('listening on *:3000');
-  console.log("OMG OMG OMG");
 });
-
-// home page, option to play alone or with partner
-// if alone, already done
-// if with partner, move them to waiting page, give them code to go to same room with partner
-// when other person connects, push them to game page
-// shared view is board and timer, not selected letters or submitted words
-// on timeup, score and display who won
-
 
 
