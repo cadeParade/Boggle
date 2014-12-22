@@ -6,6 +6,7 @@ var ChoicePage = React.createClass({
     this.props.updatePageView("OnePlayer")
   },
   handleStartMultiPlayer: function() {
+    this.props.game.createRoom();
     this.props.updatePageView("WaitingRoom")
   },
   handleJoinMultiPlayer: function() {

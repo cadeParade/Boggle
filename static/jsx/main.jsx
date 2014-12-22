@@ -7,31 +7,28 @@ var io = require('socket.io-client');
 var ChoicePage = require('./choicePage.jsx');
 var WaitingRoom = require('./waitingRoom.jsx');
 var JoinRoom = require('./joinRoom.jsx');
-var BoggleView = require('./boggleLogic.jsx')
+var BoggleView = require('./boggleLogic.jsx');
+var Game = require('../js/interpreter.js')["Game"];
 
 var App = React.createClass({
   getInitialState: function() {
     return(
       {view: "ChoicePage",
-       socket: this.props.socket}
+       game: this.props.game}
     )
-  },
-  componentDidMount: function() {
-    // socket.emit('join room', 'funlandia')
-
   },
   updatePageView: function(page) {
     this.setState({view: page})
   },
   render: function() {
     if(this.state.view === "ChoicePage") {
-      var page = <ChoicePage updatePageView={this.updatePageView} userId={this.props.userId}/>
+      var page = <ChoicePage updatePageView={this.updatePageView} game={this.props.game} />
     }
     else if (this.state.view === "WaitingRoom") {
-      var page = <WaitingRoom updatePageView={this.updatePageView} socket={this.props.socket} userId={this.props.userId}/>
+      var page = <WaitingRoom updatePageView={this.updatePageView} game={this.props.game} />
     }
     else if (this.state.view === "JoinRoom") {
-      var page = <JoinRoom updatePageView={this.updatePageView} socket={this.props.socket} userId={this.props.userId}/>
+      var page = <JoinRoom updatePageView={this.updatePageView} game={this.props.game} />
     }
     else if (this.state.view === "OnePlayer") {
       var page = <BoggleView type="onePlayer" />
@@ -44,25 +41,14 @@ var App = React.createClass({
 })
 
 
-  var socket = io();
+var game = new Game(io());
 
-  socket.createRoom = function(roomName){socket.emit('join room', roomName)}
-  socket.requestRoomJoin = function(roomName){socket.emit('request room join', roomName)}
+var app = React.render(
+  <App game={game} />,
+  document.getElementById('app')
+);
 
-  var userId = ""
-  socket.emit('request user id');
+game.app = app;
 
-  socket.on('return user id', function(userId){
-    userId = userId;
-
-    var app = React.render(
-      <App socket={socket} userId={userId} />,
-      document.getElementById('app')
-    );
-
-  })
-
-
-// socket.emit('join room', 'funlandia')
 
 

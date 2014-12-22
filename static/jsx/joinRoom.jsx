@@ -3,13 +3,11 @@ var React = require('react/addons');
 
 var JoinRoom = React.createClass({
   getInitialState: function() {
-    return {roomName: ""}
+    return({roomName:""})// this is for the text field
   },
   handleJoinRoomRequest: function() {
-    console.log('clicked', this.state.roomName)
-    this.props.socket.requestRoomJoin(this.state.roomName);
-    // this.props.updatePageView("ChoicePage");
-
+    console.log('asked to join room: ', this.state.roomName)
+    this.props.game.joinRoom(this.state.roomName);
   },
   handleTyping: function() {
     this.setState({roomName: event.target.value});

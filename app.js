@@ -29,71 +29,51 @@ app.get("/test", function(req, res) {
   res.render("app.html");
 })
 
-app.get('/one_player', function(req, res) {
-  res.render("boggle.html", {locals:{ players : "onePlayer"}});
-})
-
-app.get('/join_multiplayer', function(req, res) {
-  res.render("join_multiplayer.html")
-})
-
-app.get("/waiting_room", function(req, res) {
-  console.log("WAITING ROOM")
-  res.render("waiting.html")
-})
-
 app.post("/check_word", function(req, res) {
   var submission = req.param('word').toLowerCase();
   res.contentType('json');
   res.send({ isValidWord: wordDict[submission] === true });
 })
 
-// app.get("/two_player", function(req, res) {
-//   res.render("boggle.html", {locals:{ players : "twoPlayer" }});
-// })
-app.get("/two_player", function(req, res) {
-  res.render("waiting.html");
-})
-
-// var clients = {playerOne: {id: "none", wordList: []},
-//                playerTwo: {id: "none", wordList: []}};
-
-
-
 io.on('connection', function(socket){
-  var userId = socket.id
 
-  io.emit("user connected", userId, letters)
-
-  socket.on('join room', function(roomId) {
-    console.log('socket id', socket.id)
-    
-    socket.join(roomId);
-    console.log(io.sockets.adapter.rooms)
-  })
-
-
-
-
-  socket.on("request room join", function(roomId) {
-    console.log(socket.id, "requesting to join", roomId);
-    console.log("existing rooms = ", io.sockets.adapter.rooms)
-    if( roomId in io.sockets.adapter.rooms ) {
-      socket.join(roomId)
-      io.emit("joined room", roomId)
-      console.log('joined')
-    console.log("existing rooms = ", io.sockets.adapter.rooms)
-    }
-    else {
-      io.emit("room does not exist", roomId)
-    }
-  })
-
-
-  socket.on('request user id', function() {
+  //get user id
+  socket.on('request user id', function(fn) {
     console.log('requesting user id', socket.id);
-    io.emit('return user id', socket.id)
+    fn(socket.id)
   })
+
+  // create room
+  socket.on('create room', function(roomId) {
+    socket.join(roomId);
+    console.log("existing rooms when creating room = ", io.sockets.adapter.rooms)
+    // emit make room 
+  })
+
+  // does room exist
+
+  // join room
+  socket.on("request room join", function(roomId, fn) {
+    console.log("asking for room id: " + roomId);
+    if(roomExists(roomId)) {
+      socket.join(roomId);
+      console.log("existing rooms when requesting join= ", io.sockets.adapter.rooms);
+      console.log("keys?", Object.keys(io.sockets.adapter.rooms[roomId]));
+
+      socket.to(roomId).emit("user joined room", Object.keys(io.sockets.adapter.rooms[roomId]))
+      socket.emit("user joined room", Object.keys(io.sockets.adapter.rooms[roomId]))
+      fn(true);
+      //for each user in roomId
+      // emit event to all sockets (users) in the room that another user joined the room
+    }
+    else {fn(false)}
+  })
+
+
+  var roomExists = function(roomId) {
+    console.log("does this room exist?",io.sockets.adapter.rooms )
+    return (roomId in io.sockets.adapter.rooms );
+  }
 
   socket.on('submit word', function(user, word) {
     console.log("clients", clients)
