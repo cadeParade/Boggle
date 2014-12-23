@@ -15,11 +15,15 @@ var Game = function(socket) {
   this.socket.on('user joined room', function(roomUsers) {
     _this.users = roomUsers;
     _this.app.setState({game: _this})
-  })
+  });
 
-  this.socket.on('start game', function(tiles) {
-    _this.app.setState({view: "multiPlayer", tiles: tiles})
-  })
+  this.socket.on('start game one player', function(tiles) {
+    _this.app.setState({view: "OnePlayer", tiles: tiles})
+  });
+
+  this.socket.on('start game multiplayer', function(tiles) {
+    _this.app.setState({view: "MultiPlayer", tiles: tiles})
+  });
 
   // TODO:
   // show someone left room
@@ -50,9 +54,14 @@ Game.prototype.joinRoom = function(roomName) {
   });
 };
 
-Game.prototype.startGame = function() {
+Game.prototype.startGameMulti = function() {
   this.socket.emit('start game for all room users', this.roomName)
 };
+
+Game.prototype.startGameSingle = function() {
+  this.socket.emit('start game one player', this.roomName)
+};
+
 
 // TODO:
 // you played word

@@ -31,11 +31,11 @@ var App = React.createClass({
     else if (this.state.view === "JoinRoom") {
       var page = <JoinRoom updatePageView={this.updatePageView} game={this.props.game} />
     }
-    else if (this.state.view === "multiPlayer") {
+    else if (this.state.view === "MultiPlayer") {
       var page = <BoggleView type="multiPlayer" tiles={this.state.tiles} game={this.props.game} />
     }
     else if (this.state.view === "OnePlayer") {
-      var page = <BoggleView type="onePlayer" />
+      var page = <BoggleView type="onePlayer" tiles={this.state.tiles} game={this.props.game} />
     }
     return(
      <div>

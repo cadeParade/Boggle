@@ -56,11 +56,13 @@ io.on('connection', function(socket){
     else {fn(false)}
   })
 
+  // can these be combined?
   socket.on('start game for all room users', function(roomId) {
-    var tiles = generateTiles();
-    emitToRoom(roomId, 'start game', tiles);
+    emitToRoom(roomId, 'start game multiplayer', generateTiles());
   })
-
+  socket.on('start game one player', function(roomId) {
+    socket.emit('start game one player', generateTiles());
+  })
 
   //helper functions
   var emitToRoom = function(roomId, action, data) {

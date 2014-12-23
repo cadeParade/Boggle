@@ -10,7 +10,8 @@ var cx = React.addons.classSet;
 var BoggleBoard = React.createClass({
   getInitialState: function() {
     if ( this.props.type === "onePlayer") {
-      var tiles = tileSet();
+      console.log('tiles', this.props.tiles)
+      var tiles = this.props.tiles;
     }
     else if ( this.props.type === "multiPlayer") {
       var tiles = this.props.tiles;
@@ -107,9 +108,7 @@ var BoggleBoard = React.createClass({
     var numRows = 5,
         numCols = 5,
         rows = [],
-        // tiles = tileSet(),
         _this = this;
-        // console.log(this.state.finalScore)
     _.range(numRows).forEach(function(num){
       rows.push(<BoggleRow selectNewLetter={_this.selectNewLetter}
                            unselectLastLetter={_this.unselectLastLetter}

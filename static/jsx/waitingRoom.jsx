@@ -8,7 +8,7 @@ var WaitingRoom = React.createClass({
   },
   handleStartGame: function() {
     console.log('starting game')
-    this.props.game.startGame();
+    this.props.game.startGameMulti();
   },
   render: function() {
     var users = []

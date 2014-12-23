@@ -3,7 +3,9 @@ var React = require('react/addons');
 
 var ChoicePage = React.createClass({
   handleStartOnePlayer: function() {
-    this.props.updatePageView("OnePlayer")
+    console.log('clicked')
+    this.props.game.startGameSingle();
+    // this.props.updatePageView("OnePlayer")
   },
   handleStartMultiPlayer: function() {
     this.props.game.createRoom();
