@@ -1,11 +1,12 @@
+
 body {
     padding:20px;
     /*display: flex;*/
 }
 
 .submissions-box {
-    height: 231px;
-    padding: 5px;
+    /*height: 231px;
+    padding: 5px;*/
 }
 
 .submission-columns {
@@ -16,11 +17,13 @@ body {
    height: 80%;
 }
 .submissions-title {
-    height: 20%;
+    /*height: 20%;*/
 }
 
 .boggle-board {
-    border: 1px solid #27ae60;
+    /*border: 1px solid #27ae60;*/
+    background-color: white;
+    /*min-width: 372px;*/
 }
 
 .boggle-row {
@@ -125,4 +128,3 @@ body {
 .error {
     background-color: red;
 }
-

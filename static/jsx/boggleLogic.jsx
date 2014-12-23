@@ -117,35 +117,63 @@ var BoggleBoard = React.createClass({
                            numCols={numCols}
                            letters={_this.state.letters[num]}
                            gameIsFinished={_this.state.gameIsFinished} />)
-    })
+    });
+
     return (
-  <div className="row">
-  {this.state.test}
-    <EndGameOverlay gameIsFinished={this.state.gameIsFinished} finalScore={this.state.finalScore} />
-    <div className="large-12 columns">
-        <div className="row">
-          <div className="large-4 columns">
-            <div className="boggle-board">
-              {rows}
-            </div>
-          </div>
+      <div className="grid-items">
+        <EndGameOverlay gameIsFinished={this.state.gameIsFinished} finalScore={this.state.finalScore} />
 
-          <div className="large-8 columns">
-              <SubmissionsBox submissions={this.state.submittedWords} />
-
-              <div className="row">
-                  <div className="large-6 small-6 columns submit-word-button">
-                      <button onClick={this.handleSubmit}>Submit</button>
-                  </div>
-                  <div className="large-6 small-6 columns">
-                      <button onClick={this.handleFinalSubmit}>Score me</button>
-                  </div>
-              </div>
+        <a href="javascript:void(0)" className="grid-item">
+          <div className="boggle-board">
+            {rows}
           </div>
-        </div>
-    </div>
-    <Timer endGame={this.handleFinalSubmit} />
-  </div>
+        </a>
+        <a href="javascript:void(0)" className="grid-item grid-item-big details-container">
+          <div className="submissions-container">
+          <div className="submissions">
+            <SubmissionsBox submissions={this.state.submittedWords} />
+          </div>
+          <div>
+            <button className="submit-button" onClick={this.handleSubmit}>Submit</button>
+          </div>
+            
+
+          </div>
+          <div className="other-details">
+            <div className="timer-container"><Timer endGame={this.handleFinalSubmit} /></div>
+            <div className="other-scores">youre losing</div>
+          </div>
+        </a>
+      </div>
+
+
+  // <div className="row">
+  // {this.state.test}
+  //   <EndGameOverlay gameIsFinished={this.state.gameIsFinished} finalScore={this.state.finalScore} />
+  //   <div className="large-12 columns">
+  //       <div className="row">
+  //         <div className="large-4 columns">
+  //           <div className="boggle-board">
+  //             {rows}
+  //           </div>
+  //         </div>
+
+  //         <div className="large-8 columns">
+  //             <SubmissionsBox submissions={this.state.submittedWords} />
+
+  //             <div className="row">
+  //                 <div className="large-6 small-6 columns submit-word-button">
+  //                     <button onClick={this.handleSubmit}>Submit</button>
+  //                 </div>
+  //                 <div className="large-6 small-6 columns">
+  //                     <button onClick={this.handleFinalSubmit}>Score me</button>
+  //                 </div>
+  //             </div>
+  //         </div>
+  //       </div>
+  //   </div>
+  //   <Timer endGame={this.handleFinalSubmit} />
+  // </div>
     )
   }
 });
@@ -207,7 +235,7 @@ var Timer = React.createClass({
   },
   render: function() {
     return (
-      <div>Seconds Remaining: {this.state.totalTime - this.state.secondsElapsed}</div>
+      <div className="timer">{this.state.totalTime - this.state.secondsElapsed}</div>
     );
   }
 });
@@ -220,10 +248,7 @@ var SubmissionsBox = React.createClass({
       submissions.push(<div>{word}</div>)
     })
     return(
-      <div className="panel submissions-box ">
-        <div className="submissions-title">
-          <h3>Submissions</h3>
-        </div>
+      <div className="idk">
         <div className="submission-columns">
           {submissions}
         </div>

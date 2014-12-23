@@ -1,0 +1,47 @@
+.details-container {
+  @include outer-container;
+  .submissions-container {
+    @include span-columns(6);
+    height: 100%;
+    color: gray;
+    .submissions {
+      margin-bottom: 10px;
+      background-color: white;
+      height: 80%;
+    }
+    .submit-button {
+      width: 100%;
+      background-color: green;
+    }
+  }
+  .other-details {
+    @include span-columns(6);
+    height: 100%;
+
+    .other-scores {
+      background-color: white;
+      color: gray;
+    }
+    .timer-container {
+      background-color: white;
+      color: gray;
+      margin-bottom: 1em;
+      .timer {
+        font-size: 2em;
+      }
+    }
+  }
+
+}
+
+.idk {
+  height: 100%;
+}
+
+.submission-columns {
+  background-color: white;
+  @include columns(3 1em);
+  @include column-fill(auto);
+  height: 100%;
+  padding: 10px;
+}
