@@ -60,7 +60,7 @@ var BoggleBoard = React.createClass({
       this.clearSelection();
     }
     else {
-      $.post('/check_word', {word: submission}, function(isWord){
+      this.props.game.checkWord(submission, function(isWord){
         if(isWord.isValidWord === true){
           var submissionState = _this.state.submittedWords;
           submissionState.push(submission);

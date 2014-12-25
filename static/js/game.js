@@ -67,8 +67,6 @@ Game.prototype.startGameSingle = function() {
 
 Game.prototype.checkWord = function(submission, fn) {
   $.post('/check_word', {word: submission}, fn);
-
-  // body...
 };
 
 // TODO:
