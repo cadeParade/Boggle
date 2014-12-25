@@ -21,20 +21,9 @@ var letters = tiles();
 var clients = []
 
 
-
 app.get('/', function(req, res){
-  res.render('choice.html');
+  res.render('app.html');
 });
-
-app.get("/test", function(req, res) {
-  res.render("app.html");
-})
-
-app.post("/check_word", function(req, res) {
-  var submission = req.param('word').toLowerCase();
-  res.contentType('json');
-  res.send({ isValidWord: wordDict[submission] === true });
-})
 
 // handle user connections and actions
 io.on('connection', function(socket){
