@@ -60,8 +60,8 @@ var BoggleBoard = React.createClass({
       this.clearSelection();
     }
     else {
-      this.props.game.checkWord(submission, function(isWord){
-        if(isWord.isValidWord === true){
+      this.props.game.submitWord(submission, function(isWord) {
+        // should only get here if it passes validation
           var submissionState = _this.state.submittedWords;
           submissionState.push(submission);
           submissionState.sort();
@@ -69,12 +69,10 @@ var BoggleBoard = React.createClass({
             letterHistory: [],
             submittedWords: submissionState
           });
-        }
-        else{
-          _this.clearSelection();
-        }
       });
     }
+    _this.clearSelection();
+
   },
   scoreWord: function(wordArray) {
     var wordScore = 0;
@@ -119,6 +117,12 @@ var BoggleBoard = React.createClass({
                            gameIsFinished={_this.state.gameIsFinished} />)
     });
 
+    var userScores = []
+
+    $.each(this.props.game.userScores, function(user, score) {
+      userScores.push(<li>{user}: {score}</li>)
+    })
+
     return (
       <div className="grid-items">
         <EndGameOverlay gameIsFinished={this.state.gameIsFinished} finalScore={this.state.finalScore} />
@@ -136,12 +140,11 @@ var BoggleBoard = React.createClass({
           <div>
             <button className="submit-button" onClick={this.handleSubmit}>Submit</button>
           </div>
-            
 
           </div>
           <div className="other-details">
             <div className="timer-container"><Timer endGame={this.handleFinalSubmit} /></div>
-            <div className="other-scores">youre losing</div>
+            <div className="other-scores"><ul>{userScores}</ul></div>
           </div>
         </a>
       </div>
@@ -219,7 +222,6 @@ var Timer = React.createClass({
   },
   tick: function() {
     if(this.state.secondsElapsed === this.state.totalTime) {
-    // if(this.state.secondsElapsed === 60) {
       clearInterval(this.interval);
       this.props.endGame();
     }

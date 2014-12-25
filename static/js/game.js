@@ -3,8 +3,11 @@ var $ = require('jquery');
 
 var Game = function(socket) {
   this.socket = socket;
+  this.localUserId = null;
   this.users = [];
   this.tiles = [];
+  this.score = 0;
+  this.userScores = {}
   // this.roomName -- assigned later
   // this.app -- assigned later
 
@@ -12,14 +15,20 @@ var Game = function(socket) {
   var _this = this;
   this.socket.emit('request user id', function(id){
     _this.users.push(id);
+    _this.userScores[id] = 0;
+    _this.localUserId = id;
     _this.app.setState({game: _this})
   });
 
   this.socket.on('user joined room', function(roomUsers) {
     _this.users = roomUsers;
-    _this.app.setState({game: _this})
+    _this.users.forEach(function(user) {
+      _this.userScores[user] = 0;
+    })
+    _this.app.setState({game: _this, userScores: _this.userScores})
   });
 
+// can these be combined?
   this.socket.on('start game one player', function(tiles) {
     _this.app.setState({view: "OnePlayer", tiles: tiles})
   });
@@ -27,6 +36,17 @@ var Game = function(socket) {
   this.socket.on('start game multiplayer', function(tiles) {
     _this.app.setState({view: "MultiPlayer", tiles: tiles})
   });
+
+  this.socket.on('update score', function(addToScore, fn) {
+    _this.score = _this.score + addToScore;
+    _this.socket.emit('update scoreboard', _this.roomName, _this.localUserId, _this.score)
+    fn();
+  })
+
+  this.socket.on('display scoreboard', function(data) {
+    _this.userScores[data["userId"]] = data["score"];
+    _this.app.setState({userScores: _this.userScores})
+  })
 
   // TODO:
   // show someone left room
@@ -67,6 +87,10 @@ Game.prototype.startGameSingle = function() {
 
 Game.prototype.checkWord = function(submission, fn) {
   $.post('/check_word', {word: submission}, fn);
+};
+
+Game.prototype.submitWord = function(submission, fn) {
+  this.socket.emit('submit word', submission, fn)
 };
 
 // TODO:

@@ -15,7 +15,8 @@ var App = React.createClass({
     return(
       {view: "ChoicePage",
        game: this.props.game,
-       tiles: []}
+       tiles: [],
+       userScores: {}}
     )
   },
   updatePageView: function(page) {
@@ -32,10 +33,10 @@ var App = React.createClass({
       var page = <JoinRoom updatePageView={this.updatePageView} game={this.props.game} />
     }
     else if (this.state.view === "MultiPlayer") {
-      var page = <BoggleView type="multiPlayer" tiles={this.state.tiles} game={this.props.game} />
+      var page = <BoggleView type="multiPlayer" scores={this.state.userScores} tiles={this.state.tiles} game={this.props.game} />
     }
     else if (this.state.view === "OnePlayer") {
-      var page = <BoggleView type="onePlayer" tiles={this.state.tiles} game={this.props.game} />
+      var page = <BoggleView type="onePlayer" scores={this.state.userScores} tiles={this.state.tiles} game={this.props.game} />
     }
     return(
      <div>

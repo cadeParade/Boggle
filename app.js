@@ -64,6 +64,16 @@ io.on('connection', function(socket){
     socket.emit('start game one player', generateTiles());
   })
 
+  socket.on('submit word', function(submission, fn) {
+    if(isValidWord(submission)) {
+      socket.emit('update score', 1, fn)
+    }
+  })
+
+  socket.on('update scoreboard', function(roomId, userId, score) {
+    emitToRoom(roomId, 'display scoreboard', {userId: userId, score: score});
+  })
+
   //helper functions
   var emitToRoom = function(roomId, action, data) {
     socket.to(roomId).emit(action, data);
@@ -77,6 +87,11 @@ io.on('connection', function(socket){
   var generateTiles = function() {
     return(tiles());
   }
+
+  var isValidWord = function(submission) {
+    return(wordDict[submission.toLowerCase()]);
+  }
+
 
 
   socket.on('disconnect', function(){
