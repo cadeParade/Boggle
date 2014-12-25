@@ -8,7 +8,7 @@ var ChoicePage = require('./choicePage.jsx');
 var WaitingRoom = require('./waitingRoom.jsx');
 var JoinRoom = require('./joinRoom.jsx');
 var BoggleView = require('./boggleLogic.jsx');
-var Game = require('../js/interpreter.js')["Game"];
+var Game = require('../js/game.js')["Game"];
 
 var App = React.createClass({
   getInitialState: function() {

@@ -1,3 +1,6 @@
+var $ = require('jquery');
+
+
 var Game = function(socket) {
   this.socket = socket;
   this.users = [];
@@ -62,13 +65,18 @@ Game.prototype.startGameSingle = function() {
   this.socket.emit('start game one player', this.roomName)
 };
 
+Game.prototype.checkWord = function(submission, fn) {
+  $.post('/check_word', {word: submission}, fn);
+
+  // body...
+};
 
 // TODO:
 // you played word
 
 
 var io = require('socket.io-client');
-module.exports = { Game: Game}
+module.exports = {Game: Game}
 
 
 
