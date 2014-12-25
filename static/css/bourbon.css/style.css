@@ -238,7 +238,8 @@ button, input[type="submit"] {
       margin-right: 0; }
     .details-container .other-details .other-scores {
       background-color: white;
-      color: gray; }
+      color: gray;
+      height: 75.5%; }
     .details-container .other-details .timer-container {
       background-color: white;
       color: gray;
@@ -258,7 +259,8 @@ button, input[type="submit"] {
   -moz-column-fill: auto;
   column-fill: auto;
   height: 100%;
-  padding: 10px; }
+  padding: 10px;
+  text-align: left; }
 
 .cards:after {
   content: "";

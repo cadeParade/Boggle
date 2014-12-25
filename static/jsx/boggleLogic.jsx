@@ -17,7 +17,7 @@ var BoggleBoard = React.createClass({
       var tiles = this.props.tiles;
     }
     else {
-      var tiles = []
+      var tiles = [];
     }
     return({
       letterHistory: [],
@@ -25,7 +25,7 @@ var BoggleBoard = React.createClass({
       finalScore: 0,
       gameIsFinished: false,
       letters: tiles
-    })
+    });
   },
   selectNewLetter: function(latestLetter) {
       this.setState({ letterHistory: this.state.letterHistory.concat([latestLetter]) });

@@ -21,6 +21,7 @@
     .other-scores {
       background-color: white;
       color: gray;
+      height: 75.5%;
     }
     .timer-container {
       background-color: white;
@@ -44,4 +45,5 @@
   @include column-fill(auto);
   height: 100%;
   padding: 10px;
+  text-align: left;
 }
