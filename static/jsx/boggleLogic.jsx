@@ -91,8 +91,7 @@ var BoggleBoard = React.createClass({
     this.state.submittedWords.forEach(function(wordArray) {
       finalScore = finalScore + _this.scoreWord(wordArray);
     })
-    this.setState({finalScore: finalScore,
-                   submittedWords: []});
+    this.setState({finalScore: finalScore});
     this.endGame();
   },
   endGame: function() {
@@ -125,7 +124,7 @@ var BoggleBoard = React.createClass({
 
     return (
       <div className="grid-items">
-        <EndGameOverlay gameIsFinished={this.state.gameIsFinished} finalScore={this.state.finalScore} />
+        <EndGameOverlay gameIsFinished={this.state.gameIsFinished} wordList={this.state.submittedWords} finalScore={this.state.finalScore} />
 
         <a href="javascript:void(0)" className="grid-item">
           <div className="boggle-board">
@@ -148,35 +147,6 @@ var BoggleBoard = React.createClass({
           </div>
         </a>
       </div>
-
-
-  // <div className="row">
-  // {this.state.test}
-  //   <EndGameOverlay gameIsFinished={this.state.gameIsFinished} finalScore={this.state.finalScore} />
-  //   <div className="large-12 columns">
-  //       <div className="row">
-  //         <div className="large-4 columns">
-  //           <div className="boggle-board">
-  //             {rows}
-  //           </div>
-  //         </div>
-
-  //         <div className="large-8 columns">
-  //             <SubmissionsBox submissions={this.state.submittedWords} />
-
-  //             <div className="row">
-  //                 <div className="large-6 small-6 columns submit-word-button">
-  //                     <button onClick={this.handleSubmit}>Submit</button>
-  //                 </div>
-  //                 <div className="large-6 small-6 columns">
-  //                     <button onClick={this.handleFinalSubmit}>Score me</button>
-  //                 </div>
-  //             </div>
-  //         </div>
-  //       </div>
-  //   </div>
-  //   <Timer endGame={this.handleFinalSubmit} />
-  // </div>
     )
   }
 });
@@ -201,12 +171,18 @@ var EndGameOverlay = React.createClass({
       "replay-button": true,
       "margin-auto": true
     })
+
+    var wordList = [];
+    this.props.wordList.forEach(function(word) {
+      wordList.push(<li>{word}</li>)
+    })
     return(
       <div className={bgClasses}>
         <div className={insetClasses}>
           <div className="inset-container display-flex">
             <div className="margin-auto inset-contents">
               <h1>FINAL SCORE: {this.props.finalScore}</h1>
+              <div className='submission-columns'><ul>{wordList}</ul></div>
               <button className={buttonClasses} onClick={this.handleReplay} >Replay?</button></div>
           </div>
         </div>

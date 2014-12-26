@@ -4,21 +4,7 @@ body {
     /*display: flex;*/
 }
 
-.submissions-box {
-    /*height: 231px;
-    padding: 5px;*/
-}
 
-.submission-columns {
-   -moz-column-count: 3;
-   -moz-column-gap: 20px;
-   -webkit-column-count: 3;
-   -webkit-column-gap: 20px;
-   height: 80%;
-}
-.submissions-title {
-    /*height: 20%;*/
-}
 
 .boggle-board {
     /*border: 1px solid #27ae60;*/
@@ -69,9 +55,13 @@ body {
 }
 
 .final-score {
-    height: 300px;
+    /*height: 300px;*/
     width: 50%;
     background-color: white;
+}
+
+.replay-button {
+    margin-bottom: 20px;
 }
 
 .inset-contents {
