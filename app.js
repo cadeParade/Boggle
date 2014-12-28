@@ -15,10 +15,7 @@ app.use(express.urlencoded());
 app.use(express.json());
 
 
-var playerOneWordList = []
-var playerTwoWordList = []
-var letters = tiles();
-var clients = []
+var rooms = {}
 
 
 app.get('/', function(req, res){
@@ -32,15 +29,21 @@ io.on('connection', function(socket){
     fn(socket.id)
   })
 
-  socket.on('create room', function(roomId, fn) {
-    socket.join(roomId);
+  socket.on('create room', function(data, fn) {
+    rooms[data.roomId] = {};
+    addPlayerToRoom(data.roomId, data.playerName)
+    socket.join(data.roomId);
+    console.log('created room', data.roomId)
+    console.log(rooms[data.roomId])
+    fn(rooms[data.roomId])
   })
 
-  socket.on("request room join", function(roomId, fn) {
-    if(roomExists(roomId)) {
-      socket.join(roomId);
-      emitToRoom(roomId, 'user joined room', Object.keys(io.sockets.adapter.rooms[roomId]))
-      fn(true);
+  socket.on("request room join", function(data, fn) {
+    if(roomExists(data.roomId)) {
+      socket.join(data.roomId);
+      addPlayerToRoom(data.roomId, data.playerName);
+      emitToRoom(data.roomId, 'user joined room', rooms[data.roomId])
+      fn(true, rooms[data.roomId]);
     }
     else {fn(false)}
   })
@@ -55,7 +58,7 @@ io.on('connection', function(socket){
 
   socket.on('submit word', function(submission, fn) {
     if(isValidWord(submission)) {
-      socket.emit('update score', 1, fn)
+      socket.emit('update score', submission, fn)
     }
   })
 
@@ -64,6 +67,10 @@ io.on('connection', function(socket){
   })
 
   //helper functions
+
+  var addPlayerToRoom = function(roomId, playerName) {
+    rooms[roomId][socket.id] = {score: 0, playerName: playerName};
+  }
   var emitToRoom = function(roomId, action, data) {
     socket.to(roomId).emit(action, data);
     socket.emit(action, data);

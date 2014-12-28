@@ -74,24 +74,7 @@ var BoggleBoard = React.createClass({
     _this.clearSelection();
 
   },
-  scoreWord: function(wordArray) {
-    var wordScore = 0;
-    var wordLength = wordArray.length;
-    if(wordLength >= 3) {
-      wordScore = 1;
-      if(wordLength > 4) {
-        wordScore = wordScore + (wordLength - 4);
-      }
-    }
-    return wordScore;
-  },
   handleFinalSubmit: function() {
-    var finalScore = 0;
-    var _this = this;
-    this.state.submittedWords.forEach(function(wordArray) {
-      finalScore = finalScore + _this.scoreWord(wordArray);
-    })
-    this.setState({finalScore: finalScore});
     this.endGame();
   },
   endGame: function() {
@@ -118,8 +101,8 @@ var BoggleBoard = React.createClass({
 
     var userScores = []
 
-    $.each(this.props.game.userScores, function(user, score) {
-      userScores.push(<li>{user}: {score}</li>)
+   _.each(this.props.game.room, function(data, userId) {
+      userScores.push(<li>{user}: {data.score}</li>)
     })
 
     return (

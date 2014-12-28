@@ -3,20 +3,26 @@ var React = require('react/addons');
 
 var JoinRoom = React.createClass({
   getInitialState: function() {
-    return({roomName:""})// this is for the text field
+    return({roomName:"",
+            playerName: ""})// these is for the text field
   },
   handleJoinRoomRequest: function() {
-    console.log('asked to join room: ', this.state.roomName)
-    this.props.game.joinRoom(this.state.roomName);
+    console.log('asked to join room:'+this.state.roomName)
+    this.props.game.joinRoom(this.state.roomName, this.state.playerName);
   },
-  handleTyping: function() {
+  handleTypingRoom: function() {
     this.setState({roomName: event.target.value});
+  },
+  handleTypingPlayerName: function() {
+    this.setState({playerName: event.target.value});
   },
   render: function() {
     return(
       <div>
         <label htmlFor="room_name">Room name?</label>
-        <input id="roomName" onChange={this.handleTyping} name="room_name" type="text" />
+        <input id="roomName" onChange={this.handleTypingRoom} name="room_name" type="text" />
+        <label htmlFor="player_name">Your name?</label>
+        <input id="playerName" onChange={this.handleTypingPlayerName} name="player_name" type="text" />
         <button id="joinRoom"  onClick={this.handleJoinRoomRequest}>Submit</button>
       </div>)
   }

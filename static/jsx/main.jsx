@@ -9,6 +9,7 @@ var WaitingRoom = require('./waitingRoom.jsx');
 var JoinRoom = require('./joinRoom.jsx');
 var BoggleView = require('./boggleLogic.jsx');
 var Game = require('../js/game.js')["Game"];
+var NameForm = require('./nameForm.jsx');
 
 var App = React.createClass({
   getInitialState: function() {
@@ -31,6 +32,9 @@ var App = React.createClass({
     }
     else if (this.state.view === "JoinRoom") {
       var page = <JoinRoom updatePageView={this.updatePageView} game={this.props.game} />
+    }
+    else if (this.state.view === "NameForm") {
+      var page = <NameForm updatePageView={this.updatePageView} game={this.props.game} />
     }
     else if (this.state.view === "MultiPlayer") {
       var page = <BoggleView type="multiPlayer" scores={this.state.userScores} tiles={this.state.tiles} game={this.props.game} />
